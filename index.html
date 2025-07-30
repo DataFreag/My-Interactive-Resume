@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Resume</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="text-3xl font-bold text-center mb-6">Welcome to My Interactive Resume!</h1>
+        <div id="map-container">
+            <!-- The map image will be set as a background or an <img> tag here -->
+            <!-- Clickable areas (divs) will be injected here by JavaScript -->
+             <div id="taxi-moving-car"></div>
+            <div id="red-moving-car"></div>
+            <div id="green-moving-car"></div> <!-- This will be the moving car element -->
+
+            <div id="boy-walking-sprite" class="walking-sprite"></div>
+            <div id="girl-walking-sprite" class="walking-sprite"></div>
+            <div id="man-walking-sprite" class="walking-sprite"></div>
+            <div id="worker-walking-sprite-1" class="walking-sprite"></div>
+            <div id="worker-walking-sprite-2" class="walking-sprite"></div>
+        </div>
+    </div>
+
+    <!-- The Modal Structure -->
+    <div id="resume-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <h2 id="modal-title" class="text-2xl font-semibold mb-4"></h2>
+            <div id="modal-body" class="text-base leading-relaxed">
+                <!-- Resume content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
