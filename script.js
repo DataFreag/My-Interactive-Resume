@@ -408,12 +408,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Replace these with actual coordinates from your Tiled map!
     const peoplePaths = {
         boy: [
-            { x: 28.5*16, y: -2*16, direction: 'down', stopDuration: 0 },
-            { x: 28.5*16, y: 8*16, direction: 'down', stopDuration: 1000 },
-            { x: 26.5*16, y: 8*16, direction: 'left', stopDuration: 0 },
-            { x: 26.5*16, y: 7*16, direction: 'up', stopDuration: 1000 },
-
-
+            { x: 28.5*16, y: -2*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100}, // <<< NEW: Example of starting visible
+            { x: 28.5*16, y: 4*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.1, frameRate: 100}, // <<< NEW: Example of starting visible
+            { x: 28.5*16, y: 8*16, direction: 'down', stopDuration: 1000 ,},
+            { x: 26.5*16, y: 8*16, direction: 'left', stopDuration: 0 }, // <<< NEW: Example of hiding at this waypoint
+            { x: 26.5*16, y: 7*16, direction: 'up', stopDuration: 1000 ,hide: true, speed: 100},
         ],
         girl: [
             { x: 700, y: 50, direction: 'right', stopDuration: 0 },
@@ -443,11 +442,101 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Store animation details for each person instance
     const peopleInstances = [
-        { id: 'boy-walking-sprite', element: boySprite, path: peoplePaths.boy, speed: 0.04, currentWaypointIndex: 1, currentX: 0, currentY: 0, startTime: null, animationId: null, isStopped: false, stopUntil: 0, type: 'boy', currentFrameIndex: 0, lastFrameTime: 0, frameRate: 150 }, // frameRate in ms
-        { id: 'girl-walking-sprite', element: girlSprite, path: peoplePaths.girl, speed: 0.035, currentWaypointIndex: 0, currentX: 0, currentY: 0, startTime: null, animationId: null, isStopped: false, stopUntil: 0, type: 'girl', currentFrameIndex: 0, lastFrameTime: 0, frameRate: 180 },
-        { id: 'man-walking-sprite', element: manSprite, path: peoplePaths.man, speed: 0.04, currentWaypointIndex: 0, currentX: 0, currentY: 0, startTime: null, animationId: null, isStopped: false, stopUntil: 0, type: 'man', currentFrameIndex: 0, lastFrameTime: 0, frameRate: 160 },
-        { id: 'worker-walking-sprite-1', element: workerSprite1, path: peoplePaths.worker1, speed: 0.03, currentWaypointIndex: 0, currentX: 0, currentY: 0, startTime: null, animationId: null, isStopped: false, stopUntil: 0, type: 'worker', currentFrameIndex: 0, lastFrameTime: 0, frameRate: 200 },
-        { id: 'worker-walking-sprite-2', element: workerSprite2, path: peoplePaths.worker2, speed: 0.03, currentWaypointIndex: 0, currentX: 0, currentY: 0, startTime: null, animationId: null, isStopped: false, stopUntil: 0, type: 'worker', currentFrameIndex: 0, lastFrameTime: 0, frameRate: 200 },
+        {
+            id: 'boy-walking-sprite',
+            element: boySprite,
+            path: peoplePaths.boy,
+            speed: 0.05, // Use your desired speed value
+            currentWaypointIndex: 1,
+            currentX: 0,
+            currentY: 0,
+            startTime: null,
+            animationId: null,
+            isStopped: false,
+            stopUntil: 0,
+            type: 'boy',
+            currentFrameIndex: 0,
+            lastFrameTime: 0,
+            frameRate: 150,
+            lastUpdateTime: 0, // Keep this for consistent speed
+            isHidden: false // <<< NEW: Initial state (visible)
+        },
+        {
+            id: 'girl-walking-sprite',
+            element: girlSprite,
+            path: peoplePaths.girl,
+            speed: 0.04,
+            currentWaypointIndex: 0,
+            currentX: 0,
+            currentY: 0,
+            startTime: null,
+            animationId: null,
+            isStopped: false,
+            stopUntil: 0,
+            type: 'girl',
+            currentFrameIndex: 0,
+            lastFrameTime: 0,
+            frameRate: 180,
+            lastUpdateTime: 0,
+            isHidden: false // <<< NEW: Initial state (visible)
+        },
+        {
+            id: 'man-walking-sprite',
+            element: manSprite,
+            path: peoplePaths.man,
+            speed: 0.045,
+            currentWaypointIndex: 0,
+            currentX: 0,
+            currentY: 0,
+            startTime: null,
+            animationId: null,
+            isStopped: false,
+            stopUntil: 0,
+            type: 'man',
+            currentFrameIndex: 0,
+            lastFrameTime: 0,
+            frameRate: 160,
+            lastUpdateTime: 0,
+            isHidden: false // <<< NEW: Initial state (visible)
+        },
+        {
+            id: 'worker-walking-sprite-1',
+            element: workerSprite1,
+            path: peoplePaths.worker1,
+            speed: 0.03,
+            currentWaypointIndex: 0,
+            currentX: 0,
+            currentY: 0,
+            startTime: null,
+            animationId: null,
+            isStopped: false,
+            stopUntil: 0,
+            type: 'worker',
+            currentFrameIndex: 0,
+            lastFrameTime: 0,
+            frameRate: 200,
+            lastUpdateTime: 0,
+            isHidden: false // <<< NEW: Initial state (visible)
+        },
+        {
+            id: 'worker-walking-sprite-2',
+            element: workerSprite2,
+            path: peoplePaths.worker2,
+            speed: 0.03,
+            currentWaypointIndex: 0,
+            currentX: 0,
+            currentY: 0,
+            startTime: null,
+            animationId: null,
+            isStopped: false,
+            stopUntil: 0,
+            type: 'worker',
+            currentFrameIndex: 0,
+            lastFrameTime: 0,
+            frameRate: 200,
+            lastUpdateTime: 0,
+            isHidden: true // <<< NEW: Example: Make this one start hidden
+        },
     ];
 
     /**
@@ -466,7 +555,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const backgroundY = -row * SPRITE_FRAME_HEIGHT; // This correctly gets the Y offset
 
         personElement.style.backgroundPosition = `${backgroundX}px ${backgroundY}px`;
-        console.log(personElement.style.backgroundPosition);
     }
 
     /**
@@ -475,40 +563,32 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {DOMHighResTimeStamp} currentTime The current time provided by requestAnimationFrame.
      */
     function animatePersonPath(personData, currentTime) {
-        // If the person is supposed to be stopped, check if stop duration has passed
+        // 1. Control visibility based on `personData.isHidden`
+        if (personData.isHidden) {
+            personData.element.classList.add('hidden-by-flag');
+        } else {
+            personData.element.classList.remove('hidden-by-flag');
+        }
+
+        // 2. Handle stopped state
         if (personData.isStopped) {
             if (currentTime < personData.stopUntil) {
-                // Still stopping, show the "normal" (non-walking) frame for current direction
                 const currentDirection = personData.path[personData.currentWaypointIndex].direction;
-                updatePersonSpriteFrame(personData.element, currentDirection, 0); // Show static frame
+                updatePersonSpriteFrame(personData.element, currentDirection, 0);
                 personData.animationId = requestAnimationFrame((ts) => animatePersonPath(personData, ts));
                 return;
             } else {
-                // Stop duration over, resume movement
+                console.log(`${personData.id}: Stop ended. Resuming movement.`);
                 personData.isStopped = false;
-                personData.startTime = currentTime; // Reset start time for next segment
+                personData.startTime = null;
                 personData.currentWaypointIndex = (personData.currentWaypointIndex + 1) % personData.path.length;
-                personData.currentFrameIndex = 0; // Reset frame index when starting new movement
-                personData.lastFrameTime = currentTime;
+                personData.currentFrameIndex = 0;
+                personData.lastFrameTime = 0;
+                personData.lastUpdateTime = 0;
             }
         }
 
-        // Determine the current segment's start and end waypoints
-        const prevWaypointIndex = (personData.currentWaypointIndex === 0) ? personData.path.length - 1 : personData.currentWaypointIndex - 1;
-        const prevWaypoint = personData.path[prevWaypointIndex];
-        const targetWaypoint = personData.path[personData.currentWaypointIndex];
-
-        // Ensure startTime is set for the current segment
-        if (!personData.startTime) {
-            personData.startTime = currentTime;
-            // Initialize person's position to the start of the current segment
-            personData.currentX = prevWaypoint.x;
-            personData.currentY = prevWaypoint.y;
-            // Set initial sprite frame
-            updatePersonSpriteFrame(personData.element, targetWaypoint.direction, 0); // Start with static frame
-        }
-
-        // Get scaled map dimensions
+        // 3. Scaling and Waypoint data setup
         const mapContainerWidth = mapContainer.offsetWidth;
         const mapContainerHeight = mapContainer.offsetHeight;
         const originalMapWidth = parseFloat(mapContainer.dataset.originalMapWidth);
@@ -516,62 +596,99 @@ document.addEventListener('DOMContentLoaded', () => {
         const scaleX = mapContainerWidth / originalMapWidth;
         const scaleY = mapContainerHeight / originalMapHeight;
 
-        const prevScaledX = prevWaypoint.x * scaleX;
-        const prevScaledY = prevWaypoint.y * scaleY;
+        const targetWaypoint = personData.path[personData.currentWaypointIndex];
         const targetScaledX = targetWaypoint.x * scaleX;
         const targetScaledY = targetWaypoint.y * scaleY;
 
-        // Calculate distance for the current segment
-        const segmentDx = targetScaledX - prevScaledX;
-        const segmentDy = targetScaledY - prevScaledY;
-        const segmentDistance = Math.sqrt(segmentDx * segmentDx + segmentDy * segmentDy);
-
-        // Calculate elapsed time for the current segment
-        const segmentElapsedTime = currentTime - personData.startTime;
-
-        // Calculate progress along the current segment
-        let segmentProgress = 0;
-        if (segmentDistance > 0) { // Avoid division by zero
-            segmentProgress = Math.min((personData.speed * segmentElapsedTime) / segmentDistance, 1);
+        // 4. Initialize position for new segment
+        if (!personData.startTime) {
+            personData.startTime = currentTime;
+            const prevWaypointIndex = (personData.currentWaypointIndex === 0) ? personData.path.length - 1 : personData.currentWaypointIndex - 1;
+            const prevWaypoint = personData.path[prevWaypointIndex];
+            personData.currentX = prevWaypoint.x * scaleX;
+            personData.currentY = prevWaypoint.y * scaleY;
+            updatePersonSpriteFrame(personData.element, targetWaypoint.direction, 0);
+            console.log(`${personData.id}: Segment #${personData.currentWaypointIndex} started. From (${prevWaypoint.x},${prevWaypoint.y}) to (${targetWaypoint.x},${targetWaypoint.y}).`);
         }
 
-        // Interpolate current position
-        personData.currentX = prevScaledX + segmentDx * segmentProgress;
-        personData.currentY = prevScaledY + segmentDy * segmentProgress;
+        // 5. Calculate movement for this frame
+        if (personData.lastUpdateTime === 0) {
+            personData.lastUpdateTime = currentTime;
+        }
+        const deltaTime = currentTime - personData.lastUpdateTime;
+        personData.lastUpdateTime = currentTime;
+        const maxDeltaTime = 200;
+        const actualDeltaTime = Math.min(deltaTime, maxDeltaTime);
 
-        // Adjust position to center the sprite at the waypoint's feet (bottom-center)
-        personData.element.style.left = `${personData.currentX - (SPRITE_FRAME_WIDTH / 2)}px`;
-        personData.element.style.top = `${personData.currentY - SPRITE_FRAME_HEIGHT}px`;
+        const remainingDx = targetScaledX - personData.currentX;
+        const remainingDy = targetScaledY - personData.currentY;
+        const remainingDistance = Math.sqrt(remainingDx * remainingDx + remainingDy * remainingDy);
 
-        // Animate walking frames only if moving
-        if (segmentProgress < 1) { // Only animate frames if not at the end of the segment
+        const distanceToTravelThisFrame = personData.speed * actualDeltaTime;
+
+        // 6. Update position and handle waypoint arrival
+        if (remainingDistance > distanceToTravelThisFrame) {
+            // Still moving along the segment (visible or hidden)
+            const ratio = distanceToTravelThisFrame / remainingDistance;
+            personData.currentX += remainingDx * ratio;
+            personData.currentY += remainingDy * ratio;
+
+            // Animate walking frames
             if (currentTime - personData.lastFrameTime > personData.frameRate) {
                 personData.currentFrameIndex = (personData.currentFrameIndex + 1) % WALK_FRAMES[targetWaypoint.direction].length;
                 personData.lastFrameTime = currentTime;
             }
             updatePersonSpriteFrame(personData.element, targetWaypoint.direction, personData.currentFrameIndex);
-        } else {
-            // Person reached target, now handle stopping or moving to next
-            personData.currentX = targetScaledX; // Snap to target
-            personData.currentY = targetScaledY;
 
+        } else {
+            // Reached or passed the target waypoint, snap to it
+            personData.currentX = targetScaledX;
+            personData.currentY = targetScaledY;
+            console.log(`${personData.id}: Reached waypoint ${personData.currentWaypointIndex}.`);
+
+            // --- NEW: Apply hide/show, speed, and frameRate from waypoint ---
+            // Check and apply hide/show based on waypoint's 'hide' property
+            if (typeof targetWaypoint.hide !== 'undefined') {
+                personData.isHidden = targetWaypoint.hide;
+                console.log(`${personData.id}: Visibility changed to ${personData.isHidden ? 'hidden' : 'visible'} at waypoint ${personData.currentWaypointIndex}.`);
+            }
+
+            // Apply new speed if defined on this waypoint
+            if (typeof targetWaypoint.speed !== 'undefined') {
+                personData.speed = targetWaypoint.speed;
+                console.log(`${personData.id}: Speed changed to ${personData.speed} at waypoint ${personData.currentWaypointIndex}.`);
+            }
+
+            // Apply new frameRate if defined on this waypoint
+            if (typeof targetWaypoint.frameRate !== 'undefined') {
+                personData.frameRate = targetWaypoint.frameRate;
+                console.log(`${personData.id}: Frame rate changed to ${personData.frameRate} at waypoint ${personData.currentWaypointIndex}.`);
+            }
+            // --- END NEW ---
+
+            // Handle stopping or moving to next waypoint
             if (targetWaypoint.stopDuration > 0) {
+                console.log(`${personData.id}: Stopping for ${targetWaypoint.stopDuration}ms.`);
                 personData.isStopped = true;
                 personData.stopUntil = currentTime + targetWaypoint.stopDuration;
-                // Show static frame when stopped
                 updatePersonSpriteFrame(personData.element, targetWaypoint.direction, 0);
-                console.log(`${personData.id} stopping at (${targetWaypoint.x}, ${targetWaypoint.y}) for ${targetWaypoint.stopDuration}ms`);
             } else {
-                // No stop, move to next waypoint immediately
+                console.log(`${personData.id}: Moving to next waypoint.`);
                 personData.currentWaypointIndex = (personData.currentWaypointIndex + 1) % personData.path.length;
-                personData.startTime = currentTime; // Reset start time for the new segment
-                personData.currentFrameIndex = 0; // Reset frame index for new segment
-                personData.lastFrameTime = currentTime;
+                personData.startTime = null;
+                personData.currentFrameIndex = 0;
+                personData.lastFrameTime = 0;
+                personData.lastUpdateTime = 0;
                 const nextWaypoint = personData.path[personData.currentWaypointIndex];
-                updatePersonSpriteFrame(personData.element, nextWaypoint.direction, 0); // Set initial frame for new direction
+                updatePersonSpriteFrame(personData.element, nextWaypoint.direction, 0);
             }
         }
 
+        // 7. Apply position to DOM
+        personData.element.style.left = `${personData.currentX - (SPRITE_FRAME_WIDTH / 2)}px`;
+        personData.element.style.top = `${personData.currentY - SPRITE_FRAME_HEIGHT}px`;
+
+        // 8. Request next animation frame
         personData.animationId = requestAnimationFrame((ts) => animatePersonPath(personData, ts));
     }
 

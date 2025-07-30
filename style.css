@@ -99,6 +99,10 @@ h1 {
     transform: scale(1.5);
 }
 
+.walking-sprite.hidden-by-flag {
+    display: none; /* Completely remove from layout when hidden */
+}
+
 /* Initial background images for each sprite type (will be updated by JS) */
 #boy-walking-sprite { background-image: url('anim/people/boy.png'); }
 #girl-walking-sprite { background-image: url('anim/people/girl.png'); }
