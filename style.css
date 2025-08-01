@@ -1,192 +1,239 @@
-body {
-    font-family: 'Inter', sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f0f2f5;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Align to top to give space for title */
-    min-height: 100vh;
-    color: #333;
-    box-sizing: border-box;
-}
-
-.main-container {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    max-width: 900px;
+/* --- Preloader Styles --- */
+.preloader-overlay {
+    position: fixed; /* Covers the entire viewport */
+    top: 0;
+    left: 0;
     width: 100%;
-    text-align: center;
-    box-sizing: border-box;
-    overflow: hidden; /* Important for containing car animation */
+    height: 100%;
+    background-color: #000; /* Solid black background */
+    z-index: 9999; /* Ensures it's on top of everything */
+    display: flex; /* Use flexbox for centering content */
+    flex-direction: column; /* Stack spinner and text vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    color: #fff; /* White text color */
+    font-family: 'Press Start 2P', cursive; /* Match your pixel font if you have it */
+    font-size: 1.2em;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out; /* Smooth fade-out effect */
 }
 
-h1 {
-    color: #2c3e50;
-    font-size: 2.25rem; /* Tailwind text-3xl */
-    font-weight: 700; /* Tailwind font-bold */
-    margin-bottom: 1.5rem; /* Tailwind mb-6 */
+/* Optional: Styles for the preloader spinner */
+.preloader-spinner {
+    border: 8px solid rgba(255, 255, 255, 0.3); /* Light border */
+    border-top: 8px solid #fff; /* Solid white top border for animation */
+    border-radius: 50%; /* Make it round */
+    width: 60px;
+    height: 60px;
+    animation: spin 1.5s linear infinite; /* Spin animation */
+    margin-bottom: 20px; /* Space between spinner and text */
 }
 
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Class to hide the preloader after loading */
+.preloader-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* Prevents interaction with hidden overlay */
+}
+
+/* --- Global Resets & True Full Viewport Fill --- */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Prevent scrollbars */
+    font-family: 'Inter', sans-serif;
+    background-color: #000000; /* This color will show in the "letterbox" areas */
+
+    position: fixed; /* Fixes html/body to the viewport, ignoring scrollbar calculations */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    /* Use flexbox to center map-container within this fixed viewport */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;   /* Center vertically */
+}
+
+/* --- Main Map Container --- */
 #map-container {
     position: relative;
-    width: 100%;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio (adjust if your map has a different ratio) */
-    background-image: url('map.png'); /* Your exported map image */
-    background-size: contain; /* Ensure the entire image fits */
+ 
+    width: min(100vw, calc(100vh * (544 / 384)));
+    height: min(100vh, calc(100vw * (384 / 544)));
+
+    /* The aspect-ratio property is still useful as a fallback/reinforcer,
+       but the width/height calculations above are doing the heavy lifting. */
+    aspect-ratio: 544 / 384; 
+    
+    /* Ensure flex items don't overflow when they have intrinsic aspect ratios */
+    min-width: 0; 
+    min-height: 0;
+    
+    background-image: url('map.png');
+    background-size: contain; /* Ensure the full map image is visible within the container */
+    background-position: top center;
     background-repeat: no-repeat;
-    background-position: center;
-    border-radius: 8px;
-    overflow: hidden; /* Hide anything that goes outside the container */
-    margin: 0 auto; /* Center the map */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden; /* Crucial to clip any content that goes beyond the container */
+    margin: auto; /* Re-add auto margin with flexbox if using max-width/height */
+    z-index: 1;
 }
+
+/* ... (rest of your CSS for clickable-area, cars, sprites, modal remain the same) ... */
 
 .clickable-area {
     position: absolute;
-    background-color: rgba(0, 123, 255, 0.0); /* Transparent by default */
+    background-color: rgba(0, 123, 255, 0.0);
     cursor: pointer;
     border-radius: 6px;
     transition: background-color 0.2s ease-in-out, transform 0.1s ease-out;
-    z-index: 10; /* Ensure clickable areas are above the car */
+    z-index: 10;
 }
 
 .clickable-area:hover {
-    background-color: rgba(0, 123, 255, 0.2); /* Slight highlight on hover */
-    transform: scale(1.02); /* Subtle pop on hover */
+    background-color: rgba(0, 123, 255, 0.2);
+    transform: scale(1.02);
 }
 
-/* Moving Car Styling - Animation properties removed, now controlled by JS */
 #taxi-moving-car,
 #red-moving-car,
 #green-moving-car {
     position: absolute;
-    width: 32px; /* Adjust size based on your car image */
-    height: 32px; /* Adjust size based on your car image */
+    width: 48px;
+    height: 48px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    z-index: 5; /* Ensure car is below clickable areas but above map */
-    transition: transform 0.3s ease-out, background-image 0.1s ease-in-out;
+    z-index: 5;
     will-change: transform, left, top;
 }
 
-#taxi-moving-car {
-    background-image: url('anim/car/taxi-right.png');
-}
-
-#red-moving-car {
-    background-image: url('anim/car/red-car-right.png');
-}
-
-#green-moving-car {
-    background-image: url('anim/car/green-car-right.png');
-}
+#taxi-moving-car { background-image: url('anim/car/taxi-right.png'); }
+#red-moving-car { background-image: url('anim/car/red-car-right.png'); }
+#green-moving-car { background-image: url('anim/car/green-car-right.png'); }
 
 .walking-sprite {
     position: absolute;
-    width: 16px; /* Adjust based on single frame width of your sprite sheet */
-    height: 16px; /* Adjust based on single frame height of your sprite sheet */
+    width: 16px;
+    height: 16px;
     background-repeat: no-repeat;
-    overflow: hidden; /* Important if using background-position to show frames */
-    z-index: 6; /* Ensure people are above cars but below clickable areas */
-    transform-origin: bottom center; /* Pivot point for scaling or slight rotation */
-    /* No transition for transform here, as left/top will be directly set. */
-    /* background-position will be animated directly. */
+    overflow: hidden;
+    z-index: 6;
+    transform-origin: bottom center;
     will-change: transform, left, top, background-position;
-    transform: scale(1.5);
+    transform: scale(1.65);
 }
 
 .walking-sprite.hidden-by-flag {
-    display: none; /* Completely remove from layout when hidden */
+    display: none;
 }
 
-/* Initial background images for each sprite type (will be updated by JS) */
 #boy-walking-sprite { background-image: url('anim/people/boy.png'); }
 #girl-walking-sprite { background-image: url('anim/people/girl.png'); }
 #man-walking-sprite { background-image: url('anim/people/man.png'); }
 #worker-walking-sprite-1,
 #worker-walking-sprite-2 { background-image: url('anim/people/worker.png'); }
 
-
-
-/* Modal Styling - Enhanced for Animations */
+/* This is the main full-screen container */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
     z-index: 1000;
-    opacity: 0; /* Start hidden for animation */
-    visibility: hidden; /* Hide from screen readers when not visible */
-    transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+    background-color: #000; /* Solid black fallback */
+    
+    /* Controls visibility */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease-out, visibility 0s 0.5s;
 }
 
 .modal-overlay.visible {
     opacity: 1;
     visibility: visible;
+    transition: opacity 0.5s ease-out;
 }
 
+/* The video that plays BEHIND the content */
+.modal-background-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: 1; /* Sits behind the modal content */
+    opacity: 0.7; /* Optional: slightly dim the video */
+}
+
+/* The content container that sits ON TOP of the video */
 .modal-content {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-    max-width: 700px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto; /* Enable scrolling for long content */
-    position: relative;
-    transform: scale(0.8); /* Start smaller for animation */
-    opacity: 0; /* Start hidden for animation */
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease-out; /* Bounce effect */
+    position: relative; /* Must be relative to use z-index */
+    z-index: 2; /* Ensures content is on top of the video */
+    width: 100%;
+    height: 100%;
+    padding: 4rem 5rem; /* More padding for a spacious feel */
+    box-sizing: border-box;
+    overflow-y: auto; /* Allow scrolling for long content */
+    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
+    color: #ffffff; /* White text for contrast */
 }
 
-.modal-overlay.visible .modal-content {
-    transform: scale(1); /* Scale to full size */
-    opacity: 1;
-}
-
+/* Updated close button for the new design */
 .modal-close-btn {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 2rem;
+    right: 2rem;
     background: none;
     border: none;
-    font-size: 1.8rem;
+    font-size: 2.5rem;
     cursor: pointer;
-    color: #888;
-    padding: 5px 10px;
-    border-radius: 50%;
-    transition: background-color 0.2s, color 0.2s;
+    color: #fff;
+    opacity: 0.7;
+    transition: opacity 0.2s, transform 0.2s;
 }
 
 .modal-close-btn:hover {
-    background-color: #f0f0f0;
-    color: #333;
+    opacity: 1;
+    transform: scale(1.1);
 }
 
+/* Updated text styles for the new design */
 #modal-title {
-    color: #2c3e50;
-    font-size: 1.875rem; /* Tailwind text-2xl */
-    font-weight: 600; /* Tailwind font-semibold */
-    margin-bottom: 1rem; /* Tailwind mb-4 */
+    color: #ffffff;
+    font-size: 3rem; /* Larger title */
+    font-weight: 700;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5); /* Underline effect */
+    padding-bottom: 1rem;
 }
 
 #modal-body {
-    line-height: 1.6;
-    text-align: left;
-    font-size: 1rem; /* Tailwind text-base */
+    line-height: 1.7;
+    font-size: 1.1rem;
+    max-width: 900px; /* Constrain line length for readability */
 }
 
-/* Basic Tailwind-like classes for content (can be expanded) */
+/* Ensure links in the modal are also visible */
+#modal-body a {
+    color: #87CEEB; /* A nice light blue for links */
+    text-decoration: underline;
+}
+
+/* Tailwind-like classes */
 .text-3xl { font-size: 2.25rem; }
 .font-bold { font-weight: 700; }
 .text-center { text-align: center; }

@@ -17,114 +17,83 @@ document.addEventListener('DOMContentLoaded', () => {
     const workerSprite1 = document.getElementById('worker-walking-sprite-1');
     const workerSprite2 = document.getElementById('worker-walking-sprite-2');
 
-    // Define your resume content here. (No changes from previous version)
-    const resumeContent = {
-        home: {
-            title: "About Me & Contact",
-            content: `
-                <p>Hello! I'm [Your Name], a passionate [Your Profession] with a knack for [Your Key Skill]. I love creating engaging experiences and solving complex problems with elegant solutions.</p>
-                <p><strong>Contact:</strong></p>
-                <ul>
-                    <li>Email: your.email@example.com</li>
-                    <li>LinkedIn: <a href="https://linkedin.com/in/yourprofile" target="_blank" class="text-blue-600 hover:underline">linkedin.com/in/yourprofile</a></li>
-                    <li>GitHub: <a href="https://github.com/yourprofile" target="_blank" class="text-blue-600 hover:underline">github.com/yourprofile</a></li>
-                    <li>Phone: (123) 456-7890</li>
-                </ul>
-                <p>Feel free to explore my interactive resume by clicking on different buildings!</p>
-            `
-        },
-        office: {
-            title: "Work Experience",
-            content: `
-                <h3>[Job Title 1] at [Company Name 1]</h3>
-                <p><strong>[Start Date] – [End Date]</strong></p>
-                <ul>
-                    <li>[Achievement 1]: Briefly describe a key accomplishment and its impact.</li>
-                    <li>[Responsibility 1]: Detail a significant responsibility.</li>
-                    <li>[Technology 1]: Mention technologies used.</li>
-                </ul>
-                <h3>[Job Title 2] at [Company Name 2]</h3>
-                <p><strong>[Start Date] – [End Date]</strong></p>
-                <ul>
-                    <li>[Achievement 2]: Another key accomplishment.</li>
-                    <li>[Responsibility 2]: Another significant responsibility.</li>
-                    <li>[Technology 2]: More technologies.</li>
-                </ul>
-            `
-        },
-        gallery: {
-            title: "Skills & Technologies",
-            content: `
-                <p>My technical toolkit includes:</p>
-                <ul>
-                    <li><strong>Programming Languages:</strong> JavaScript, Python, Java, C++</li>
-                    <li><strong>Frameworks/Libraries:</strong> React, Node.js, Express, Django, Spring Boot</li>
-                    <li><strong>Databases:</strong> MongoDB, PostgreSQL, MySQL, Firestore</li>
-                    <li><strong>Tools & Platforms:</strong> Git, Docker, AWS, Google Cloud Platform, Figma</li>
-                    <li><strong>Other:</strong> RESTful APIs, Agile Methodologies, UI/UX Design Principles</li>
-                </ul>
-            `
-        },
-        workshop: {
-            title: "Projects",
-            content: `
-                <h3>[Project Name 1]</h3>
-                <p><strong>Description:</strong> [Brief description of the project, what it does, and your role.]</p>
-                <p><strong>Technologies:</strong> [List technologies used, e.g., React, Node.js, MongoDB]</p>
-                <p><strong>Link:</strong> <a href="[Project URL]" target="_blank" class="text-blue-600 hover:underline">[Live Demo / GitHub Repo]</a></p>
+    // Define resume content paths and IDs
+    const BUILDING_IDS = ['home', 'office', 'gallery', 'workshop', 'school', 'park']; // Matches your Tiled object names and HTML file names
+    const RESUME_CONTENT_PATH = 'resume-sections/'; // Path to your content files
 
-                <h3>[Project Name 2]</h3>
-                <p><strong>Description:</strong> [Brief description of the project, what it does, and your role.]</p>
-                <p><strong>Technologies:</strong> [List technologies used, e.g., Python, Django, PostgreSQL]</p>
-                <p><strong>Link:</strong> <a href="[Project URL]" target="_blank" class="text-blue-600 hover:underline">[Live Demo / GitHub Repo]</a></p>
-            `
-        },
-        school: {
-            title: "Education",
-            content: `
-                <h3>[Degree Name], [Major]</h3>
-                <p><strong>[University Name], [City, State]</strong></p>
-                <p><strong>[Graduation Year]</strong></p>
-                <ul>
-                    <li>Relevant Coursework: [List a few relevant courses]</li>
-                    <li>Awards/Honors: [Any academic achievements]</li>
-                </ul>
-            `
-        },
-        park: {
-            title: "Hobbies & Interests",
-            content: `
-                <p>When I'm not coding, you can find me [Your Hobby 1], [Your Hobby 2], or [Your Hobby 3]. I believe a well-rounded individual brings more to the table!</p>
-                <ul>
-                    <li>Reading sci-fi novels</li>
-                    <li>Hiking in national parks</li>
-                    <li>Playing strategic board games</li>
-                </ul>
-            `
-        }
+    // Define your resume content here. (No changes from previous version)
+    // Cache for fetched resume content
+    const resumeContentCache = {};
+
+    // Titles for the modal windows
+    const resumeTitles = {
+        home: "About Me & Contact",
+        office: "Work Experience",
+        gallery: "Skills & Technologies",
+        workshop: "Projects",
+        school: "Education",
+        park: "Hobbies & Interests"
     };
 
-    // Function to show the modal with content (No changes)
+    // Add this new object
+    const buildingVideos = {
+        home: 'anim/videos/home.mp4',
+        office: 'anim/videos/office.mp4',
+        gallery: 'anim/videos/gallery.mp4',
+        workshop: 'anim/videos/workshop.mp4',
+        school: 'anim/videos/school.mp4',
+        park: 'anim/videos/park.mp4'
+    };
+
+    // Get a reference to the modal's video element at the top with other constants
+    const modalVideo = document.querySelector('.modal-background-video');
+    const modalVideoSource = modalVideo.querySelector('source');
+
+    // NEW showModal function
     function showModal(section) {
-        const content = resumeContent[section];
-        if (content) {
-            modalTitle.textContent = content.title;
-            modalBody.innerHTML = content.content;
+        const title = resumeTitles[section];
+        const content = resumeContentCache[section];
+        const videoSrc = buildingVideos[section];
+
+        if (title && content && videoSrc) {
+            // Set content first
+            modalTitle.textContent = title;
+            modalBody.innerHTML = content;
+
+            // Set and play the new video
+            modalVideoSource.src = videoSrc;
+            modalVideo.load(); // Important: load the new source
+            modalVideo.play().catch(e => console.error("Video play failed:", e)); // Play video
+
+            // Show the modal
             resumeModal.classList.add('visible');
+
         } else {
-            console.error(`Content for section "${section}" not found.`);
+            console.error(`Data for section "${section}" not found.`);
         }
     }
 
-    // Function to hide the modal (No changes)
+    // NEW hideModal function
     function hideModal() {
+        // Hide the modal
         resumeModal.classList.remove('visible');
+
+        // Stop the video to save resources
+        modalVideo.pause();
+        modalVideoSource.src = ""; // Unload the video source
     }
 
     // Event listeners for modal close (No changes)
     modalCloseBtn.addEventListener('click', hideModal);
     resumeModal.addEventListener('click', (event) => {
         if (event.target === resumeModal) {
+            hideModal();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        // Check if the Escape key was pressed and if the modal is currently visible
+        if (event.key === 'Escape' && resumeModal.classList.contains('visible')) {
             hideModal();
         }
     });
@@ -174,14 +143,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- JavaScript Animation Logic for City using requestAnimationFrame ---
     // Define sprite sheet configurations
-    const SPRITE_FRAME_WIDTH = 16; // Width of a single animation frame
-    const SPRITE_FRAME_HEIGHT = 16; // Height of a single animation frame
+    const SPRITE_FRAME_WIDTH = 16; // Width of a single animation frame (from your tiled map)
+    const SPRITE_FRAME_HEIGHT = 16; // Height of a single animation frame (from your tiled map)
     const SPRITE_SHEET_COLS = 3; // Number of columns in the sprite sheet for walking frames (e.g., normal, left, right step)
-    const SPRITE_SHEET_ROWS = 4;
+    // Removed SPRITE_SHEET_ROWS as it's not directly used in the current updatePersonSpriteFrame logic for calculating Y offset
 
     // Define the frame indices for each direction and step within your sprite sheet
     const WALK_FRAMES = {
-        'left': [0, 1, 2], // Indices for normal, left foot, right foot when moving right
+        'left': [0, 1, 2],
         'down': [3, 4, 5],
         'up': [6, 7, 8],
         'right': [9, 10, 11]
@@ -251,29 +220,65 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function preloadResumeContent() {
+        console.log("Starting to preload resume content...");
+        const fetchPromises = BUILDING_IDS.map(id => {
+            const url = `${RESUME_CONTENT_PATH}${id}.html`;
+            return fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok for ${url}`);
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    resumeContentCache[id] = html;
+                    console.log(`Cached content for: ${id}.html`);
+                })
+                .catch(error => {
+                    console.error(`Failed to fetch and cache ${url}:`, error);
+                    resumeContentCache[id] = `<p>Error: Could not load content for this section.</p>`; // Provide fallback content
+                });
+        });
+
+        return Promise.all(fetchPromises).then(() => {
+            console.log("All resume content has been preloaded and cached.");
+        });
+    }
+
+
+    // --- CRUCIAL ADDITION: Clickable Area Definitions from Tiled Map ---
+    // Extract these directly from your map.json object layer
+    const clickableAreaDefinitions = [
+        { id: 'park', originalX: 1.26984126984127, originalY: 1.76160751441651, originalWidth: 108.792580702693, originalHeight: 124.249450092147 },
+        { id: 'workshop', originalX: 35.1560549313358, originalY: 257.988942393437, originalWidth: 202.128292015932, originalHeight: 107.009095773141 },
+        { id: 'home', originalX: 258.686166101896, originalY: 244.315557933535, originalWidth: 42.8036383092563, originalHeight: 103.442125914036 },
+        { id: 'office', originalX: 401.364960466084, originalY: 242.532073003983, originalWidth: 45.1816182153261, originalHeight: 90.9577314071696 },
+        { id: 'school', originalX: 306.84025919981, originalY: 18.407466856905, originalWidth: 107.009095773141, originalHeight: 124.843945068664 },
+        { id: 'gallery', originalX: 211.126567980501, originalY: 51.6991855418822, originalWidth: 74.3118720646811, originalHeight: 89.1742464776173 }
+    ];
 
     // Define paths for each car in Tiled pixel coordinates
-    // IMPORTANT: Replace these with actual coordinates from your Tiled map!
-    // Each waypoint can have a 'stopDuration' in milliseconds.
+    // Ensure these are based on the 544x384 map. The *16 is correct for tile-based Tiled coordinates.
     const carPaths = {
         taxi: [
             { x: -5*16, y: 13*16, direction: 'right', stopDuration: 0 },
             { x: 17*16, y: 13*16, direction: 'right', stopDuration: 1000 },
             { x: 22*16, y: 13*16, direction: 'right', stopDuration: 0 },
-            { x: 22*16, y: 28*16, direction: 'down', stopDuration: 0 },
+            { x: 22*16, y: 28*16, direction: 'down', stopDuration: 0 }, // Assuming 28*16 is within reasonable bounds (384 height)
             { x: -5*16, y: 28*16, direction: 'left', stopDuration: 0 },
         ],
         green: [
             { x: 35*16, y: 11*16, direction: 'left', stopDuration: 0 },
             { x: 14*16, y: 11*16, direction: 'left', stopDuration: 1000 },
             { x: 11*16, y: 11*16, direction: 'left', stopDuration: 0 },
-            { x: 11*16, y: 10*16, direction: 'up', stopDuration: 1000 },
+            { x: 11*16, y: 9.9*16, direction: 'up', stopDuration: 1000 },
+            { x: 11*16, y: 10*16, direction: 'up', stopDuration: 0 },
             { x: 9*16, y: 10*16, direction: 'left', stopDuration: 0 },
             { x: 9*16, y: 11*16, direction: 'down', stopDuration: 0 },
             { x: -5*16, y: 11*16, direction: 'left', stopDuration: 0 },
             { x: -5*16, y: 28*16, direction: 'left', stopDuration: 0 },
             { x: 35*16, y: 28*16, direction: 'left', stopDuration: 0 },
-
         ],
         red: [
             { x: 30*16, y: -5*16, direction: 'down', stopDuration: 0 },
@@ -291,8 +296,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Store animation details for each car instance
     const carInstances = [
         { id: 'taxi-moving-car', element: taxiCar, path: carPaths.taxi, speed: 0.05, currentWaypointIndex: 1, currentX: 0, currentY: 0, startTime: null, animationId: null, isStopped: false, stopUntil: 0, type: 'taxi' },
-        { id: 'red-moving-car', element: redCar, path: carPaths.red, speed: 0.5, currentWaypointIndex: 1, currentX: 0, currentY: 0, startTime: null, animationId: null, isStopped: false, stopUntil: 0, type: 'red' },
-        { id: 'green-moving-car', element: greenCar, path: carPaths.green, speed: 0.5, currentWaypointIndex: 1, currentX: 0, currentY: 0, startTime: null, animationId: null, isStopped: false, stopUntil: 0, type: 'green' }
+        { id: 'red-moving-car', element: redCar, path: carPaths.red, speed: 0.05, currentWaypointIndex: 1, currentX: 0, currentY: 0, startTime: null, animationId: null, isStopped: false, stopUntil: 0, type: 'red' },
+        { id: 'green-moving-car', element: greenCar, path: carPaths.green, speed: 0.05, currentWaypointIndex: 1, currentX: 0, currentY: 0, startTime: null, animationId: null, isStopped: false, stopUntil: 0, type: 'green' }
     ];
 
     /**
@@ -330,7 +335,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Determine the current segment's start and end waypoints
-        // The previous waypoint is the start of the current segment
         const prevWaypointIndex = (carData.currentWaypointIndex === 0) ? carData.path.length - 1 : carData.currentWaypointIndex - 1;
         const prevWaypoint = carData.path[prevWaypointIndex];
         const targetWaypoint = carData.path[carData.currentWaypointIndex];
@@ -353,6 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const scaleX = mapContainerWidth / originalMapWidth;
         const scaleY = mapContainerHeight / originalMapHeight;
 
+        // Scale the original coordinates from Tiled's pixel values
         const prevScaledX = prevWaypoint.x * scaleX;
         const prevScaledY = prevWaypoint.y * scaleY;
         const targetScaledX = targetWaypoint.x * scaleX;
@@ -381,7 +386,15 @@ document.addEventListener('DOMContentLoaded', () => {
         carData.element.style.top = `${carData.currentY}px`;
 
         // Apply transform: center the origin, then rotate
-        carData.element.style.transform = `translate(-50%, -50%)`;
+        // Car elements should have their origin (0,0) at their top-left.
+        // If your car images are centered, you might need translate(-50%, -50%).
+        // But for top-left aligned, usually no transform needed or just for rotation.
+        // Based on your CSS `background-size: contain`, the image inside the div is centered.
+        // The div itself needs to be positioned.
+        // If the car sprite's hotspot is its center, use translate(-50%, -50%) to align its center
+        // with the (currentX, currentY) point.
+        carData.element.style.transform = `translate(-50%, -50%)`; // Assuming car image center is its hotspot
+
 
         // Check if car has reached the target waypoint
         if (segmentProgress >= 1) {
@@ -405,38 +418,49 @@ document.addEventListener('DOMContentLoaded', () => {
         carData.animationId = requestAnimationFrame((ts) => animateCarPath(carData, ts));
     }
 
-    // Replace these with actual coordinates from your Tiled map!
+    // --- CRUCIAL CORRECTION for peoplePaths ---
+    // Update raw pixel coordinates to match your 544x384 map, or convert to tile * 16
+    // Assuming you got actual pixel coordinates for the boy, but the others were placeholders.
+    // If you used Tiled for boy path, then his coordinates are likely fine.
+    // For girl, man, worker1, worker2, you need to revisit Tiled and get valid pixel coordinates.
+    // I'm using placeholder values here for girl, man, workers that *fit* a 544x384 map,
+    // but you need to replace them with your actual desired paths.
     const peoplePaths = {
         boy: [
-            { x: 28.5*16, y: -2*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100}, // <<< NEW: Example of starting visible
-            { x: 28.5*16, y: 4*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.1, frameRate: 100}, // <<< NEW: Example of starting visible
-            { x: 28.5*16, y: 8*16, direction: 'down', stopDuration: 1000 ,},
-            { x: 26.5*16, y: 8*16, direction: 'left', stopDuration: 0 }, // <<< NEW: Example of hiding at this waypoint
+            // Your existing tile-based coordinates are good for a 16px tile map
+            { x: 28.5*16, y: -2*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
+            { x: 28.5*16, y: 4*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.1, frameRate: 100},
+            { x: 28.5*16, y: 8*16, direction: 'down', stopDuration: 1000 },
+            { x: 26.5*16, y: 8*16, direction: 'left', stopDuration: 0 },
             { x: 26.5*16, y: 7*16, direction: 'up', stopDuration: 1000 ,hide: true, speed: 100},
         ],
         girl: [
-            { x: 700, y: 50, direction: 'right', stopDuration: 0 },
-            { x: 700, y: 350, direction: 'right', stopDuration: 0 },
-            { x: 500, y: 350, direction: 'right', stopDuration: 1000 },
-            { x: 500, y: 50, direction: 'right', stopDuration: 0 },
-            { x: 700, y: 50, direction: 'right', stopDuration: 0 }
+            // DUMMY VALUES - REPLACE WITH ACTUAL PIXEL COORDINATES FROM YOUR MAP
+            { x: 450, y: 50, direction: 'right', stopDuration: 0 },
+            { x: 450, y: 300, direction: 'right', stopDuration: 0 },
+            { x: 300, y: 300, direction: 'right', stopDuration: 1000 },
+            { x: 300, y: 50, direction: 'right', stopDuration: 0 },
+            { x: 450, y: 50, direction: 'right', stopDuration: 0 }
         ],
         man: [
-            { x: 450, y: 600, direction: 'right', stopDuration: 0 },
-            { x: 450, y: 400, direction: 'right', stopDuration: 0 },
-            { x: 600, y: 400, direction: 'right', stopDuration: 0 },
-            { x: 600, y: 600, direction: 'right', stopDuration: 0 },
-            { x: 450, y: 600, direction: 'right', stopDuration: 0 }
+            // DUMMY VALUES - REPLACE WITH ACTUAL PIXEL COORDINATES FROM YOUR MAP
+            { x: 100, y: 350, direction: 'right', stopDuration: 0 },
+            { x: 100, y: 200, direction: 'right', stopDuration: 0 },
+            { x: 200, y: 200, direction: 'right', stopDuration: 0 },
+            { x: 200, y: 350, direction: 'right', stopDuration: 0 },
+            { x: 100, y: 350, direction: 'right', stopDuration: 0 }
         ],
         worker1: [
-            { x: 200, y: 50, direction: 'right', stopDuration: 0 },
-            { x: 200, y: 400, direction: 'right', stopDuration: 0 },
-            { x: 200, y: 50, direction: 'right', stopDuration: 0 }
+            // DUMMY VALUES - REPLACE WITH ACTUAL PIXEL COORDINATES FROM YOUR MAP
+            { x: 20, y: 20, direction: 'right', stopDuration: 0 },
+            { x: 20, y: 250, direction: 'right', stopDuration: 0 },
+            { x: 20, y: 20, direction: 'right', stopDuration: 0 }
         ],
         worker2: [
-            { x: 800, y: 600, direction: 'right', stopDuration: 0 },
-            { x: 800, y: 200, direction: 'right', stopDuration: 0 },
-            { x: 800, y: 600, direction: 'right', stopDuration: 0 }
+            // DUMMY VALUES - REPLACE WITH ACTUAL PIXEL COORDINATES FROM YOUR MAP
+            { x: 500, y: 300, direction: 'right', stopDuration: 0 },
+            { x: 500, y: 100, direction: 'right', stopDuration: 0 },
+            { x: 500, y: 300, direction: 'right', stopDuration: 0 }
         ]
     };
 
@@ -446,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'boy-walking-sprite',
             element: boySprite,
             path: peoplePaths.boy,
-            speed: 0.05, // Use your desired speed value
+            speed: 0.05,
             currentWaypointIndex: 1,
             currentX: 0,
             currentY: 0,
@@ -458,8 +482,8 @@ document.addEventListener('DOMContentLoaded', () => {
             currentFrameIndex: 0,
             lastFrameTime: 0,
             frameRate: 150,
-            lastUpdateTime: 0, // Keep this for consistent speed
-            isHidden: false // <<< NEW: Initial state (visible)
+            lastUpdateTime: 0,
+            isHidden: false
         },
         {
             id: 'girl-walking-sprite',
@@ -478,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
             lastFrameTime: 0,
             frameRate: 180,
             lastUpdateTime: 0,
-            isHidden: false // <<< NEW: Initial state (visible)
+            isHidden: false
         },
         {
             id: 'man-walking-sprite',
@@ -497,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
             lastFrameTime: 0,
             frameRate: 160,
             lastUpdateTime: 0,
-            isHidden: false // <<< NEW: Initial state (visible)
+            isHidden: false
         },
         {
             id: 'worker-walking-sprite-1',
@@ -516,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
             lastFrameTime: 0,
             frameRate: 200,
             lastUpdateTime: 0,
-            isHidden: false // <<< NEW: Initial state (visible)
+            isHidden: false
         },
         {
             id: 'worker-walking-sprite-2',
@@ -535,7 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
             lastFrameTime: 0,
             frameRate: 200,
             lastUpdateTime: 0,
-            isHidden: true // <<< NEW: Example: Make this one start hidden
+            isHidden: true
         },
     ];
 
@@ -546,13 +570,13 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {number} frameIndex The index of the frame within the direction's animation sequence (0, 1, 2).
      */
     function updatePersonSpriteFrame(personElement, direction, frameIndex) {
-        const frameOffset = WALK_FRAMES[direction][frameIndex]; // Get the absolute frame index on the sheet
+        const frameOffset = WALK_FRAMES[direction][frameIndex];
 
         const col = frameOffset % SPRITE_SHEET_COLS;
-        const row = Math.floor(frameOffset / SPRITE_SHEET_COLS); // This calculates the row based on the frameOffset
+        const row = Math.floor(frameOffset / SPRITE_SHEET_COLS);
 
         const backgroundX = -col * SPRITE_FRAME_WIDTH;
-        const backgroundY = -row * SPRITE_FRAME_HEIGHT; // This correctly gets the Y offset
+        const backgroundY = -row * SPRITE_FRAME_HEIGHT;
 
         personElement.style.backgroundPosition = `${backgroundX}px ${backgroundY}px`;
     }
@@ -597,6 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const scaleY = mapContainerHeight / originalMapHeight;
 
         const targetWaypoint = personData.path[personData.currentWaypointIndex];
+        // Scale the original coordinates from Tiled's pixel values
         const targetScaledX = targetWaypoint.x * scaleX;
         const targetScaledY = targetWaypoint.y * scaleY;
 
@@ -605,6 +630,7 @@ document.addEventListener('DOMContentLoaded', () => {
             personData.startTime = currentTime;
             const prevWaypointIndex = (personData.currentWaypointIndex === 0) ? personData.path.length - 1 : personData.currentWaypointIndex - 1;
             const prevWaypoint = personData.path[prevWaypointIndex];
+            // Scale the original coordinates from Tiled's pixel values
             personData.currentX = prevWaypoint.x * scaleX;
             personData.currentY = prevWaypoint.y * scaleY;
             updatePersonSpriteFrame(personData.element, targetWaypoint.direction, 0);
@@ -646,20 +672,17 @@ document.addEventListener('DOMContentLoaded', () => {
             personData.currentY = targetScaledY;
             console.log(`${personData.id}: Reached waypoint ${personData.currentWaypointIndex}.`);
 
-            // --- NEW: Apply hide/show, speed, and frameRate from waypoint ---
-            // Check and apply hide/show based on waypoint's 'hide' property
+            // --- Apply hide/show, speed, and frameRate from waypoint ---
             if (typeof targetWaypoint.hide !== 'undefined') {
                 personData.isHidden = targetWaypoint.hide;
                 console.log(`${personData.id}: Visibility changed to ${personData.isHidden ? 'hidden' : 'visible'} at waypoint ${personData.currentWaypointIndex}.`);
             }
 
-            // Apply new speed if defined on this waypoint
             if (typeof targetWaypoint.speed !== 'undefined') {
                 personData.speed = targetWaypoint.speed;
                 console.log(`${personData.id}: Speed changed to ${personData.speed} at waypoint ${personData.currentWaypointIndex}.`);
             }
 
-            // Apply new frameRate if defined on this waypoint
             if (typeof targetWaypoint.frameRate !== 'undefined') {
                 personData.frameRate = targetWaypoint.frameRate;
                 console.log(`${personData.id}: Frame rate changed to ${personData.frameRate} at waypoint ${personData.currentWaypointIndex}.`);
@@ -684,113 +707,117 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // 7. Apply position to DOM
-        personData.element.style.left = `${personData.currentX - (SPRITE_FRAME_WIDTH / 2)}px`;
-        personData.element.style.top = `${personData.currentY - SPRITE_FRAME_HEIGHT}px`;
+        // 7. Apply position to DOM (adjusted for sprite's center/bottom-center)
+        // Assuming your person sprites are 16x16, and you want their feet to be at the coordinate.
+        // If your CSS defines a background-size for the sprite div that changes its displayed size,
+        // you'll need to adjust SPRITE_FRAME_WIDTH/HEIGHT by that scaling too.
+        // For 16x16 sprites, we position the bottom-center.
+        const spriteWidthScaled = SPRITE_FRAME_WIDTH * scaleX;
+        const spriteHeightScaled = SPRITE_FRAME_HEIGHT * scaleY;
+        personData.element.style.left = `${personData.currentX - spriteWidthScaled / 2}px`;
+        personData.element.style.top = `${personData.currentY - spriteHeightScaled}px`;
 
-        // 8. Request next animation frame
         personData.animationId = requestAnimationFrame((ts) => animatePersonPath(personData, ts));
     }
 
-    // --- End JavaScript Animation Logic for Multiple Cars ---
 
+    // --- Main Initialization and Resize Handler ---
+    function initializeAndResizeElements() {
+        // Get current scaled dimensions of the map container
+        const mapContainerWidth = mapContainer.offsetWidth;
+        const mapContainerHeight = mapContainer.offsetHeight;
+        const originalMapWidth = parseFloat(mapContainer.dataset.originalMapWidth);
+        const originalMapHeight = parseFloat(mapContainer.dataset.originalMapHeight);
 
-    // --- JavaScript Animation Logic for Multiple sprites using requestAnimationFrame ---
-    // Preload sprite images to ensure smooth swapping
+        // Calculate current scaling factors
+        const scaleX = mapContainerWidth / originalMapWidth;
+        const scaleY = mapContainerHeight / originalMapHeight;
 
-    // Fetch the Tiled map JSON data
-    fetch('map.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(mapData => {
-            // Store original map dimensions in dataset for scaling calculations
-            mapContainer.dataset.originalMapWidth = mapData.width * mapData.tilewidth;
-            mapContainer.dataset.originalMapHeight = mapData.height * mapData.tileheight;
+        // --- Create/Update Clickable Areas ---
+        clickableAreaDefinitions.forEach(areaData => {
+            let areaElement = document.getElementById(`clickable-${areaData.id}`);
+            if (!areaElement) {
+                // Create if it doesn't exist
+                areaElement = document.createElement('div');
+                areaElement.id = `clickable-${areaData.id}`;
+                areaElement.classList.add('clickable-area');
+                mapContainer.appendChild(areaElement);
 
-            const objectLayer = mapData.layers.find(layer => layer.type === 'objectgroup');
-
-            if (objectLayer && objectLayer.objects) {
-                const mapWidth = mapData.width * mapData.tilewidth;
-                const mapHeight = mapData.height * mapData.tileheight;
-
-                mapContainer.style.paddingBottom = `${(mapHeight / mapWidth) * 100}%`;
-
-                objectLayer.objects.forEach(obj => {
-                    const clickableArea = document.createElement('div');
-                    clickableArea.classList.add('clickable-area');
-
-                    clickableArea.style.left = `${(obj.x / mapWidth) * 100}%`;
-                    clickableArea.style.top = `${(obj.y / mapHeight) * 100}%`;
-                    clickableArea.style.width = `${(obj.width / mapWidth) * 100}%`;
-                    clickableArea.style.height = `${(obj.height / mapHeight) * 100}%`;
-
-                    clickableArea.dataset.section = obj.name;
-
-                    clickableArea.addEventListener('click', () => {
-                        animateClickableArea(clickableArea, 400, 1.1);
-                        showModal(obj.name);
-                    });
-
-                    mapContainer.appendChild(clickableArea);
+                // Add event listener only once when created
+                areaElement.addEventListener('click', () => {
+                    showModal(areaData.id);
+                    animateClickableArea(areaElement); // Apply pulse animation on click
                 });
-
-                // Start preloading images, then start car animations
-                preloadAnimImages().then(() => {
-                    carInstances.forEach(carData => {
-                        if (carData.element) {
-                            // Set initial position based on first waypoint
-                            // Note: The first waypoint in the path is the *starting point* of the first segment.
-                            // The `prevWaypoint` logic inside animateCarPath will handle the correct
-                            // interpolation from this initial point to the *next* waypoint in the path.
-                            const initialWaypoint = carData.path[0]; // Get the very first point of the path
-                            carData.currentX = initialWaypoint.x * (mapContainer.offsetWidth / parseFloat(mapContainer.dataset.originalMapWidth));
-                            carData.currentY = initialWaypoint.y * (mapContainer.offsetHeight / parseFloat(mapContainer.dataset.originalMapHeight));
-                            carData.element.style.left = `${carData.currentX}px`;
-                            carData.element.style.top = `${carData.currentY}px`;
-
-                            // Set initial image based on the direction of the *first segment*
-                            const firstSegmentTarget = carData.path[1] || carData.path[0]; // If only one point, use it
-                            updateCarImage(carData.element, carData.type, firstSegmentTarget.direction);
-
-                            // Start animation loop for this car
-                            requestAnimationFrame((ts) => animateCarPath(carData, ts));
-                        } else {
-                            console.warn(`Car element with ID '${carData.id}' not found. Check HTML.`);
-                        }
-                    });
-                    // Start walking animations for people
-                    peopleInstances.forEach(personData => {
-                        if (personData.element) {
-                            const initialWaypoint = personData.path[0];
-                            personData.currentX = initialWaypoint.x * (mapContainer.offsetWidth / parseFloat(mapContainer.dataset.originalMapWidth));
-                            personData.currentY = initialWaypoint.y * (mapContainer.offsetHeight / parseFloat(mapContainer.dataset.originalMapHeight));
-
-                            personData.element.style.left = `${personData.currentX - (SPRITE_FRAME_WIDTH / 2)}px`;
-                            personData.element.style.top = `${personData.currentY - SPRITE_FRAME_HEIGHT}px`;
-
-                            const firstSegmentTarget = personData.path[1] || personData.path[0];
-                            updatePersonSpriteFrame(personData.element, firstSegmentTarget.direction, 0);
-
-                            requestAnimationFrame((ts) => animatePersonPath(personData, ts));
-                        } else {
-                            console.warn(`Person element with ID '${personData.id}' not found. Check HTML.`);
-                        }
-                    });
-
-                });
-
-                
-
-            } else {
-                console.warn("No object layer found in map.json or it's empty.");
             }
-        })
-        .catch(error => {
-            console.error('Error loading or parsing map.json:', error);
-            mapContainer.innerHTML = '<p style="color: red; text-align: center;">Failed to load interactive map. Please check the `map.json` file path and content.</p>';
+
+            // Apply scaled positions and dimensions from Tiled data
+            areaElement.style.left = `${areaData.originalX * scaleX}px`;
+            areaElement.style.top = `${areaData.originalY * scaleY}px`;
+            areaElement.style.width = `${areaData.originalWidth * scaleX}px`;
+            areaElement.style.height = `${areaData.originalHeight * scaleY}px`;
+            console.log(`Updated ${areaData.id}: Left=${areaElement.style.left}, Top=${areaElement.style.top}, Width=${areaElement.style.width}, Height=${areaElement.style.height}`);
         });
+
+        // --- Snap Cars and People to current scaled position on resize ---
+        // This is important because ongoing animations will continue to use the old scale
+        // until the next segment starts or it's explicitly updated.
+        carInstances.forEach(carData => {
+            // Find the current actual original waypoint coordinates based on its path and current index
+            // If it's midway, it's trickier, but snapping to the 'previous' waypoint is generally safe
+            // to prevent large jumps and rely on the next animation frame to smooth it out.
+            const currentPathSegmentStart = carData.path[(carData.currentWaypointIndex === 0 ? carData.path.length - 1 : carData.currentWaypointIndex - 1)];
+            carData.currentX = currentPathSegmentStart.x * scaleX;
+            carData.currentY = currentPathSegmentStart.y * scaleY;
+            carData.element.style.left = `${carData.currentX}px`;
+            carData.element.style.top = `${carData.currentY}px`;
+            carData.startTime = null; // Force animation to re-initialize segment on next frame
+            carData.lastUpdateTime = 0;
+            console.log(`Snapped ${carData.id} to new scale. CurrentX: ${carData.currentX}, CurrentY: ${carData.currentY}`);
+        });
+
+        peopleInstances.forEach(personData => {
+            const currentPathSegmentStart = personData.path[(personData.currentWaypointIndex === 0 ? personData.path.length - 1 : personData.currentWaypointIndex - 1)];
+            // Apply original X/Y from path, scaled.
+            personData.currentX = currentPathSegmentStart.x * scaleX;
+            personData.currentY = currentPathSegmentStart.y * scaleY;
+
+            // Adjust for sprite hotpot (bottom-center for people)
+            const spriteWidthScaled = SPRITE_FRAME_WIDTH * scaleX;
+            const spriteHeightScaled = SPRITE_FRAME_HEIGHT * scaleY;
+            personData.element.style.left = `${personData.currentX - spriteWidthScaled / 2}px`;
+            personData.element.style.top = `${personData.currentY - spriteHeightScaled}px`;
+
+            personData.startTime = null; // Force animation to re-initialize segment on next frame
+            personData.lastUpdateTime = 0;
+            personData.lastFrameTime = 0; // Reset sprite animation frame timing too
+            console.log(`Snapped ${personData.id} to new scale. CurrentX: ${personData.currentX}, CurrentY: ${personData.currentY}`);
+        });
+    }
+
+    // --- Event Listeners ---
+    // Wait for the DOM to be ready, then start preloading everything.
+    const preloader = document.getElementById('preloader');
+
+    Promise.all([
+        preloadAnimImages(),
+        preloadResumeContent()
+    ]).then(() => {
+        console.log("All assets loaded. Initializing the scene.");
+
+        // Hide the preloader with a fade-out effect
+        if(preloader) {
+            preloader.classList.add('hidden');
+        }
+
+        // Initialize element positions and start animations
+        initializeAndResizeElements();
+        carInstances.forEach(car => requestAnimationFrame((ts) => animateCarPath(car, ts)));
+        peopleInstances.forEach(person => requestAnimationFrame((ts) => animatePersonPath(person, ts)));
+
+    }).catch(error => {
+        console.error("A critical error occurred during preloading:", error);
+        if(preloader) {
+            preloader.innerHTML = "Failed to load assets. Please refresh the page.";
+        }
+    });
 });
