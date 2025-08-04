@@ -134,11 +134,10 @@ html, body {
     display: none;
 }
 
-#boy-walking-sprite { background-image: url('anim/people/boy.png'); }
-#girl-walking-sprite { background-image: url('anim/people/girl.png'); }
+#boy-walking-sprite-1, #boy-walking-sprite-2 { background-image: url('anim/people/boy.png'); }
+#girl-walking-sprite-1, #girl-walking-sprite-2, #girl-walking-sprite-3 { background-image: url('anim/people/girl.png'); }
 #man-walking-sprite { background-image: url('anim/people/man.png'); }
-#worker-walking-sprite-1,
-#worker-walking-sprite-2 { background-image: url('anim/people/worker.png'); }
+#worker-walking-sprite-1, #worker-walking-sprite-2 { background-image: url('anim/people/worker.png'); }
 
 /* This is the main full-screen container */
 .modal-overlay {

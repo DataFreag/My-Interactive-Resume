@@ -11,8 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const greenCar = document.getElementById('green-moving-car');
 
     // Get references to all walking sprite elements
-    const boySprite = document.getElementById('boy-walking-sprite');
-    const girlSprite = document.getElementById('girl-walking-sprite');
+    const boySprite1 = document.getElementById('boy-walking-sprite-1');
+    const boySprite2 = document.getElementById('boy-walking-sprite-2');
+    const girlSprite1 = document.getElementById('girl-walking-sprite-1');
+    const girlSprite2 = document.getElementById('girl-walking-sprite-2');
+    const girlSprite3 = document.getElementById('girl-walking-sprite-3');
+
     const manSprite = document.getElementById('man-walking-sprite');
     const workerSprite1 = document.getElementById('worker-walking-sprite-1');
     const workerSprite2 = document.getElementById('worker-walking-sprite-2');
@@ -414,15 +418,36 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Animation Logic for People Walking Sprites ---
     // Define paths for each person in Tiled pixel coordinates
     const peoplePaths = {
-        boy: [
+        boy1: [
             { x: 28.5*16, y: -2*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
             { x: 28.5*16, y: 4*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.1, frameRate: 100},
             { x: 28.5*16, y: 8*16, direction: 'down', stopDuration: 1000 },
             { x: 26.5*16, y: 8*16, direction: 'left', stopDuration: 0 },
             { x: 26.5*16, y: 7*16, direction: 'up', stopDuration: 1000 ,hide: true, speed: 100},
         ],
-        girl: [
+        boy2: [
+            { x: 26.5*16, y: -2*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
+            { x: 26.5*16, y: 4*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.1, frameRate: 100},
+            { x: 26.5*16, y: 8*16, direction: 'down', stopDuration: 1000 },
+            { x: 26.5*16, y: 8*16, direction: 'left', stopDuration: 0 },
+            { x: 26.5*16, y: 7*16, direction: 'up', stopDuration: 1000 ,hide: true, speed: 100},
+        ],
+        girl1: [
             { x: 450, y: 50, direction: 'right', stopDuration: 0 },
+            { x: 450, y: 300, direction: 'right', stopDuration: 0 },
+            { x: 300, y: 300, direction: 'right', stopDuration: 1000 },
+            { x: 300, y: 50, direction: 'right', stopDuration: 0 },
+            { x: 450, y: 50, direction: 'right', stopDuration: 0 }
+        ],
+        girl2: [
+            { x: 200, y: 50, direction: 'right', stopDuration: 0 },
+            { x: 450, y: 300, direction: 'right', stopDuration: 0 },
+            { x: 300, y: 300, direction: 'right', stopDuration: 1000 },
+            { x: 300, y: 50, direction: 'right', stopDuration: 0 },
+            { x: 450, y: 50, direction: 'right', stopDuration: 0 }
+        ],
+        girl3: [
+            { x: 50, y: 50, direction: 'right', stopDuration: 0 },
             { x: 450, y: 300, direction: 'right', stopDuration: 0 },
             { x: 300, y: 300, direction: 'right', stopDuration: 1000 },
             { x: 300, y: 50, direction: 'right', stopDuration: 0 },
@@ -450,9 +475,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Define people instances with their paths and properties
     const peopleInstances = [
         {
-            id: 'boy-walking-sprite',
-            element: boySprite,
-            path: peoplePaths.boy,
+            id: 'boy-walking-sprite-1',
+            element: boySprite1,
+            path: peoplePaths.boy1,
             speed: 0.05,
             currentWaypointIndex: 1,
             currentX: 0,
@@ -470,9 +495,69 @@ document.addEventListener('DOMContentLoaded', () => {
             currentScale: BASE_SPRITE_SCALE_MULTIPLIER,
         },
         {
-            id: 'girl-walking-sprite',
-            element: girlSprite,
-            path: peoplePaths.girl,
+            id: 'boy-walking-sprite-2',
+            element: boySprite2,
+            path: peoplePaths.boy2,
+            speed: 0.05,
+            currentWaypointIndex: 1,
+            currentX: 0,
+            currentY: 0,
+            startTime: null,
+            animationId: null,
+            isStopped: false,
+            stopUntil: 0,
+            type: 'boy',
+            currentFrameIndex: 0,
+            lastFrameTime: 0,
+            frameRate: 150,
+            lastUpdateTime: 0,
+            isHidden: false,
+            currentScale: BASE_SPRITE_SCALE_MULTIPLIER,
+        },
+        {
+            id: 'girl-walking-sprite-1',
+            element: girlSprite1,
+            path: peoplePaths.girl1,
+            speed: 0.04,
+            currentWaypointIndex: 0,
+            currentX: 0,
+            currentY: 0,
+            startTime: null,
+            animationId: null,
+            isStopped: false,
+            stopUntil: 0,
+            type: 'girl',
+            currentFrameIndex: 0,
+            lastFrameTime: 0,
+            frameRate: 180,
+            lastUpdateTime: 0,
+            isHidden: false,
+            currentScale: BASE_SPRITE_SCALE_MULTIPLIER,
+        },
+        {
+            id: 'girl-walking-sprite-2',
+            element: girlSprite2,
+            path: peoplePaths.girl2,
+            speed: 0.04,
+            currentWaypointIndex: 0,
+            currentX: 0,
+            currentY: 0,
+            startTime: null,
+            animationId: null,
+            isStopped: false,
+            stopUntil: 0,
+            type: 'girl',
+            currentFrameIndex: 0,
+            lastFrameTime: 0,
+            frameRate: 180,
+            lastUpdateTime: 0,
+            isHidden: false,
+            currentScale: BASE_SPRITE_SCALE_MULTIPLIER,
+        },
+        {
+            id: 'girl-walking-sprite-3',
+            element: girlSprite3,
+            path: peoplePaths.girl3,
             speed: 0.04,
             currentWaypointIndex: 0,
             currentX: 0,
