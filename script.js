@@ -433,42 +433,42 @@ document.addEventListener('DOMContentLoaded', () => {
             { x: 26.5*16, y: 7*16, direction: 'up', stopDuration: 1000 ,hide: true, speed: 100},
         ],
         girl1: [
-            { x: 450, y: 50, direction: 'right', stopDuration: 0 },
-            { x: 450, y: 300, direction: 'right', stopDuration: 0 },
-            { x: 300, y: 300, direction: 'right', stopDuration: 1000 },
-            { x: 300, y: 50, direction: 'right', stopDuration: 0 },
-            { x: 450, y: 50, direction: 'right', stopDuration: 0 }
+            { x: 20.5*16, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.5*16, y: 300, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.5*16, y: 300, direction: 'right', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.5*16, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.5*16, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 }
         ],
         girl2: [
-            { x: 200, y: 50, direction: 'right', stopDuration: 0 },
-            { x: 450, y: 300, direction: 'right', stopDuration: 0 },
-            { x: 300, y: 300, direction: 'right', stopDuration: 1000 },
-            { x: 300, y: 50, direction: 'right', stopDuration: 0 },
-            { x: 450, y: 50, direction: 'right', stopDuration: 0 }
+            { x: 200, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 450, y: 300, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 300, y: 300, direction: 'right', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 300, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 450, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 }
         ],
         girl3: [
-            { x: 50, y: 50, direction: 'right', stopDuration: 0 },
-            { x: 450, y: 300, direction: 'right', stopDuration: 0 },
-            { x: 300, y: 300, direction: 'right', stopDuration: 1000 },
-            { x: 300, y: 50, direction: 'right', stopDuration: 0 },
-            { x: 450, y: 50, direction: 'right', stopDuration: 0 }
+            { x: 50, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 450, y: 300, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 300, y: 300, direction: 'right', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 300, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 450, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 }
         ],
         man: [
-            { x: 100, y: 350, direction: 'right', stopDuration: 0 },
-            { x: 100, y: 200, direction: 'right', stopDuration: 0 },
-            { x: 200, y: 200, direction: 'right', stopDuration: 0 },
-            { x: 200, y: 350, direction: 'right', stopDuration: 0 },
-            { x: 100, y: 350, direction: 'right', stopDuration: 0 }
+            { x: 100, y: 350, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 100, y: 200, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 200, y: 200, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 200, y: 350, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 100, y: 350, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 }
         ],
         worker1: [
-            { x: 20, y: 20, direction: 'right', stopDuration: 0 },
-            { x: 20, y: 250, direction: 'right', stopDuration: 0 },
-            { x: 20, y: 20, direction: 'right', stopDuration: 0 }
+            { x: 20, y: 20, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20, y: 250, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20, y: 20, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 }
         ],
         worker2: [
-            { x: 500, y: 300, direction: 'right', stopDuration: 0 },
-            { x: 500, y: 100, direction: 'right', stopDuration: 0 },
-            { x: 500, y: 300, direction: 'right', stopDuration: 0 }
+            { x: 500, y: 300, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 500, y: 100, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 500, y: 300, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 }
         ]
     };
 
