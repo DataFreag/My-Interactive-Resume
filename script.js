@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const boySprite2 = document.getElementById('boy-walking-sprite-2');
     const girlSprite1 = document.getElementById('girl-walking-sprite-1');
     const girlSprite2 = document.getElementById('girl-walking-sprite-2');
-    const girlSprite3 = document.getElementById('girl-walking-sprite-3');
+    const kidSprite1 = document.getElementById('kid-walking-sprite-1');
 
     const manSprite = document.getElementById('man-walking-sprite');
     const workerSprite1 = document.getElementById('worker-walking-sprite-1');
@@ -419,18 +419,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // Define paths for each person in Tiled pixel coordinates
     const peoplePaths = {
         boy1: [
+            // done
             { x: 28.5*16, y: -2*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
-            { x: 28.5*16, y: 4*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.1, frameRate: 100},
-            { x: 28.5*16, y: 8*16, direction: 'down', stopDuration: 1000 },
-            { x: 26.5*16, y: 8*16, direction: 'left', stopDuration: 0 },
-            { x: 26.5*16, y: 7*16, direction: 'up', stopDuration: 1000 ,hide: true, speed: 100},
+            { x: 28.5*16, y: 4*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.1, frameRate: 60},
+            { x: 28.5*16, y: 8.5*16, direction: 'down', stopDuration: 0 },
+            { x: 26.75*16, y: 8.5*16, direction: 'left', stopDuration: 0 },
+            { x: 26.75*16, y: 8.2*16, direction: 'up', stopDuration: 1000 ,hide: true, speed: 100, frameRate: 100},
+            { x: 22.75*16, y: 10*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.05},
+            { x: 22.75*16, y: 10.25*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.05},
+            { x: 26*16, y: 10.25*16, direction: 'right', stopDuration: 0 ,hide: false, speed: 0.05},
+            { x: 26*16, y: 10.25*16, direction: 'down', stopDuration: 1000 ,hide: false, speed: 0.05},
+            { x: 26*16, y: 11*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.05},
+            { x: 27.75*16, y: 11*16, direction: 'right', stopDuration: 0 ,hide: false, speed: 0.05},
+            { x: 27.75*16, y: 12.5*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.05},
+            { x: 27.75*16, y: 12.5*16, direction: 'right', stopDuration: 1000 ,hide: false, speed: 0.05},
+            { x: 27.75*16, y: 15.5*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.1, frameRate: 60},
+            { x: 27.75*16, y: 15.5*16, direction: 'up', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
+            { x: 31.75*16, y: 15.5*16, direction: 'right', stopDuration: 1000 ,hide: false, speed: 0.05, frameRate: 100},
+            { x: 27.75*16, y: 15.5*16, direction: 'left', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
+            { x: 27.75*16, y: 11*16, direction: 'up', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
+            { x: 28.5*16, y: 11*16, direction: 'right', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
+            { x: 28.5*16, y: -3*16, direction: 'up', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
         ],
         boy2: [
-            { x: 26.5*16, y: -2*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
-            { x: 26.5*16, y: 4*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.1, frameRate: 100},
-            { x: 26.5*16, y: 8*16, direction: 'down', stopDuration: 1000 },
-            { x: 26.5*16, y: 8*16, direction: 'left', stopDuration: 0 },
-            { x: 26.5*16, y: 7*16, direction: 'up', stopDuration: 1000 ,hide: true, speed: 100},
+            // done
+            { x: 19.75*16, y: 3.75*16, direction: 'left', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
+            { x: 19.75*16, y: 3.75*16, direction: 'up', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
+            { x: 19.75*16, y: 3.75*16, direction: 'left', stopDuration: 1000 ,hide: false, speed: 0.05, frameRate: 100},
+            { x: 25.75*16, y: 3.75*16, direction: 'right', stopDuration: 1000 ,hide: false, speed: 0.03, frameRate: 100},
+            { x: 25.75*16, y: 6.1*16, direction: 'down', stopDuration: 1000 },
+            { x: 25.75*16, y: 3.75*16, direction: 'up', stopDuration: 0 },
+            { x: 25.75*16, y: 3.75*16, direction: 'right', stopDuration: 1000 },
         ],
         girl1: [
             { x: 20.5*16, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
@@ -440,18 +459,84 @@ document.addEventListener('DOMContentLoaded', () => {
             { x: 20.5*16, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 }
         ],
         girl2: [
-            { x: 200, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 450, y: 300, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 300, y: 300, direction: 'right', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 300, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 450, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 }
+            { x: 21.75*16, y: 10.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 21.75*16, y: 10.5*16, direction: 'left', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 22.75*16, y: 10.5*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 22.75*16, y: 9.5*16, direction: 'up', stopDuration: 1000, hide: true, speed: 0.04, frameRate: 180 },
+            { x: 22.75*16, y: 9.5*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 22.75*16, y: 10.5*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 10.5*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 10.5*16, direction: 'right', stopDuration: 1250, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 11.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 11.75*16, y: 11.25*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 11.75*16, y: 10.25*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 11.75*16, y: 10.25*16, direction: 'left', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 11.75*16, y: 11.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 13.75*16, y: 11.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 13.75*16, y: 10.25*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 13.75*16, y: 10.25*16, direction: 'right', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 15.75*16, y: 10.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 15.75*16, y: 9.25*16, direction: 'up', stopDuration: 1250, hide: true, speed: 0.04, frameRate: 180 },
+            { x: 15.75*16, y: 9.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 15.75*16, y: 11.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 17.75*16, y: 11.25*16, direction: 'right', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 18.75*16, y: 11.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 18.75*16, y: 15.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 15.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 20.25*16, direction: 'down', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 15.25*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 18.75*16, y: 15.25*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 18.75*16, y: 15.25*16, direction: 'up', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+
+
+
+
+
+
+
+
+
+
         ],
-        girl3: [
-            { x: 50, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 450, y: 300, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 300, y: 300, direction: 'right', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 300, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 450, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 }
+        kid1: [
+            { x: 20.75*16, y: 10.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 10.5*16, direction: 'right', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 22.75*16, y: 10.5*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 22.75*16, y: 9.5*16, direction: 'up', stopDuration: 1250, hide: true, speed: 0.04, frameRate: 180 },
+            { x: 22.75*16, y: 9.5*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 22.75*16, y: 10.5*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 21.75*16, y: 10.5*16, direction: 'left', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 21.75*16, y: 11.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 11.75*16, y: 11.25*16, direction: 'left', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 14.75*16, y: 11.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 14.75*16, y: 10.25*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 14.75*16, y: 10.25*16, direction: 'left', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 15.75*16, y: 10.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 15.75*16, y: 9.25*16, direction: 'up', stopDuration: 1000, hide: true, speed: 0.04, frameRate: 180 },
+            { x: 15.75*16, y: 9.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 15.75*16, y: 11.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 18.75*16, y: 11.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 18.75*16, y: 11.25*16, direction: 'left', stopDuration: 1250, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 18.75*16, y: 15.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 15.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 21.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 21.25*16, direction: 'up', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 15.25*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 19.75*16, y: 15.25*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 19.75*16, y: 15.25*16, direction: 'up', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 18.75*16, y: 15.25*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+
+
+
+
+
+
+
+
+
+
+
+
         ],
         man: [
             { x: 100, y: 350, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
@@ -519,7 +604,7 @@ document.addEventListener('DOMContentLoaded', () => {
             element: girlSprite1,
             path: peoplePaths.girl1,
             speed: 0.04,
-            currentWaypointIndex: 0,
+            currentWaypointIndex: 1,
             currentX: 0,
             currentY: 0,
             startTime: null,
@@ -539,7 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
             element: girlSprite2,
             path: peoplePaths.girl2,
             speed: 0.04,
-            currentWaypointIndex: 0,
+            currentWaypointIndex: 1,
             currentX: 0,
             currentY: 0,
             startTime: null,
@@ -555,18 +640,18 @@ document.addEventListener('DOMContentLoaded', () => {
             currentScale: BASE_SPRITE_SCALE_MULTIPLIER,
         },
         {
-            id: 'girl-walking-sprite-3',
-            element: girlSprite3,
-            path: peoplePaths.girl3,
+            id: 'kid-walking-sprite-1',
+            element: kidSprite1,
+            path: peoplePaths.kid1,
             speed: 0.04,
-            currentWaypointIndex: 0,
+            currentWaypointIndex: 1,
             currentX: 0,
             currentY: 0,
             startTime: null,
             animationId: null,
             isStopped: false,
             stopUntil: 0,
-            type: 'girl',
+            type: 'kid',
             currentFrameIndex: 0,
             lastFrameTime: 0,
             frameRate: 180,
