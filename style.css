@@ -134,7 +134,7 @@ html, body {
     display: none;
 }
 
-#boy-walking-sprite-1, #boy-walking-sprite-2 { background-image: url('anim/people/boy.png'); }
+#boy-walking-sprite-1, #boy-walking-sprite-2 , #boy-walking-sprite-3 { background-image: url('anim/people/boy.png'); }
 #girl-walking-sprite-1, #girl-walking-sprite-2 { background-image: url('anim/people/girl.png'); }
 #kid-walking-sprite-1 { background-image: url('anim/people/kid.png'); }
 #man-walking-sprite { background-image: url('anim/people/man.png'); }

@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Get references to all walking sprite elements
     const boySprite1 = document.getElementById('boy-walking-sprite-1');
     const boySprite2 = document.getElementById('boy-walking-sprite-2');
+    const boySprite3 = document.getElementById('boy-walking-sprite-3');
     const girlSprite1 = document.getElementById('girl-walking-sprite-1');
     const girlSprite2 = document.getElementById('girl-walking-sprite-2');
     const kidSprite1 = document.getElementById('kid-walking-sprite-1');
@@ -39,35 +40,15 @@ document.addEventListener('DOMContentLoaded', () => {
         park: "Hobbies & Interests"
     };
 
-    // Add this new object
-    const buildingVideos = {
-        home: 'anim/videos/home.mp4',
-        office: 'anim/videos/office.mp4',
-        gallery: 'anim/videos/gallery.mp4',
-        workshop: 'anim/videos/workshop.mp4',
-        school: 'anim/videos/school.mp4',
-        park: 'anim/videos/park.mp4'
-    };
-
-    // Get a reference to the modal's video element at the top with other constants
-    const modalVideo = document.querySelector('.modal-background-video');
-    const modalVideoSource = modalVideo.querySelector('source');
-
     // NEW showModal function
     function showModal(section) {
         const title = resumeTitles[section];
         const content = resumeContentCache[section];
-        const videoSrc = buildingVideos[section];
 
-        if (title && content && videoSrc) {
+        if (title && content) {
             // Set content first
             modalTitle.textContent = title;
             modalBody.innerHTML = content;
-
-            // Set and play the new video
-            modalVideoSource.src = videoSrc;
-            modalVideo.load();
-            modalVideo.play().catch(e => console.error("Video play failed:", e));
 
             // Show the modal
             resumeModal.classList.add('visible');
@@ -81,10 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function hideModal() {
         // Hide the modal
         resumeModal.classList.remove('visible');
-
-        // Stop the video to save resources
-        modalVideo.pause();
-        modalVideoSource.src = "";
     }
 
     // Event listeners for modal close (No changes)
@@ -271,16 +248,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const carPaths = {
         taxi: [
             { x: -5*16, y: 13*16, direction: 'right', stopDuration: 0 },
-            { x: 17*16, y: 13*16, direction: 'right', stopDuration: 1000 },
+            { x: 17*16, y: 13*16, direction: 'right', stopDuration: 13000 },
             { x: 22*16, y: 13*16, direction: 'right', stopDuration: 0 },
             { x: 22*16, y: 28*16, direction: 'down', stopDuration: 0 },
             { x: -5*16, y: 28*16, direction: 'left', stopDuration: 0 },
         ],
         green: [
-            { x: 35*16, y: 11*16, direction: 'left', stopDuration: 0 },
-            { x: 14*16, y: 11*16, direction: 'left', stopDuration: 1000 },
+            { x: 36*16, y: 11*16, direction: 'left', stopDuration: 0 },
+            { x: 35*16, y: 11*16, direction: 'left', stopDuration: 25000 },
+            { x: 14*16, y: 11*16, direction: 'left', stopDuration: 0 },
             { x: 11*16, y: 11*16, direction: 'left', stopDuration: 0 },
-            { x: 11*16, y: 9.9*16, direction: 'up', stopDuration: 1000 },
+            { x: 11*16, y: 9.9*16, direction: 'up', stopDuration: 8000 },
             { x: 11*16, y: 10*16, direction: 'up', stopDuration: 0 },
             { x: 9*16, y: 10*16, direction: 'left', stopDuration: 0 },
             { x: 9*16, y: 11*16, direction: 'down', stopDuration: 0 },
@@ -289,15 +267,15 @@ document.addEventListener('DOMContentLoaded', () => {
             { x: 35*16, y: 28*16, direction: 'left', stopDuration: 0 },
         ],
         red: [
-            { x: 30*16, y: -5*16, direction: 'down', stopDuration: 0 },
-            { x: 30*16, y: 8*16, direction: 'down', stopDuration: 1000 },
-            { x: 30*16, y: 16*16, direction: 'down', stopDuration: 0 },
-            { x: 32*16, y: 16*16, direction: 'right', stopDuration: 3000 },
-            { x: 30*16, y: 16*16, direction: 'right', stopDuration: 0 },
-            { x: 30*16, y: 18*16, direction: 'up', stopDuration: 300 },
-            { x: 30*16, y: 10*16, direction: 'up', stopDuration: 0 },
-            { x: 31*16, y: 10*16, direction: 'right', stopDuration: 0 },
-            { x: 31*16, y: -5*16, direction: 'up', stopDuration: 0 },
+            { x: 30.25*16, y: -5*16, direction: 'down', stopDuration: 35000 },
+            { x: 30.25*16, y: 8*16, direction: 'down', stopDuration: 1000 },
+            { x: 30.25*16, y: 16*16, direction: 'down', stopDuration: 0 },
+            { x: 32*16, y: 16*16, direction: 'right', stopDuration: 45000 },
+            { x: 30.25*16, y: 16*16, direction: 'right', stopDuration: 0 },
+            { x: 30.25*16, y: 18*16, direction: 'up', stopDuration: 300 },
+            { x: 30.25*16, y: 10*16, direction: 'up', stopDuration: 0 },
+            { x: 31.75*16, y: 10*16, direction: 'right', stopDuration: 0 },
+            { x: 31.75*16, y: -5*16, direction: 'up', stopDuration: 0 },
         ]
     };
 
@@ -402,7 +380,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetWaypoint.stopDuration > 0) {
                 carData.isStopped = true;
                 carData.stopUntil = currentTime + targetWaypoint.stopDuration;
-                console.log(`${carData.id} stopping at (${targetWaypoint.x}, ${targetWaypoint.y}) for ${targetWaypoint.stopDuration}ms`);
             } else {
                 // Move to the next waypoint
                 carData.currentWaypointIndex = (carData.currentWaypointIndex + 1) % carData.path.length;
@@ -419,12 +396,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Define paths for each person in Tiled pixel coordinates
     const peoplePaths = {
         boy1: [
-            // done
-            { x: 28.5*16, y: -2*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
-            { x: 28.5*16, y: 4*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.1, frameRate: 60},
+            { x: 28.5*16, y: -2*16, direction: 'down', stopDuration: 54000 ,hide: false, speed: 0.05, frameRate: 100},
+            { x: 28.5*16, y: -2*16, direction: 'down', stopDuration: 2000 ,hide: false, speed: 0.05, frameRate: 100},
+            { x: 28.5*16, y: 4*16, direction: 'down', stopDuration: 3000 ,hide: false, speed: 0.1, frameRate: 60},
             { x: 28.5*16, y: 8.5*16, direction: 'down', stopDuration: 0 },
             { x: 26.75*16, y: 8.5*16, direction: 'left', stopDuration: 0 },
-            { x: 26.75*16, y: 8.2*16, direction: 'up', stopDuration: 1000 ,hide: true, speed: 100, frameRate: 100},
+            { x: 26.75*16, y: 8.2*16, direction: 'up', stopDuration: 10000 ,hide: true, speed: 100, frameRate: 100},
             { x: 22.75*16, y: 10*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.05},
             { x: 22.75*16, y: 10.25*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.05},
             { x: 26*16, y: 10.25*16, direction: 'right', stopDuration: 0 ,hide: false, speed: 0.05},
@@ -435,14 +412,13 @@ document.addEventListener('DOMContentLoaded', () => {
             { x: 27.75*16, y: 12.5*16, direction: 'right', stopDuration: 1000 ,hide: false, speed: 0.05},
             { x: 27.75*16, y: 15.5*16, direction: 'down', stopDuration: 0 ,hide: false, speed: 0.1, frameRate: 60},
             { x: 27.75*16, y: 15.5*16, direction: 'up', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
-            { x: 31.75*16, y: 15.5*16, direction: 'right', stopDuration: 1000 ,hide: false, speed: 0.05, frameRate: 100},
+            { x: 31.75*16, y: 15.5*16, direction: 'right', stopDuration: 6000 ,hide: false, speed: 0.05, frameRate: 100},
             { x: 27.75*16, y: 15.5*16, direction: 'left', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
             { x: 27.75*16, y: 11*16, direction: 'up', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
             { x: 28.5*16, y: 11*16, direction: 'right', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
             { x: 28.5*16, y: -3*16, direction: 'up', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
         ],
         boy2: [
-            // done
             { x: 19.75*16, y: 3.75*16, direction: 'left', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
             { x: 19.75*16, y: 3.75*16, direction: 'up', stopDuration: 0 ,hide: false, speed: 0.05, frameRate: 100},
             { x: 19.75*16, y: 3.75*16, direction: 'left', stopDuration: 1000 ,hide: false, speed: 0.05, frameRate: 100},
@@ -451,68 +427,78 @@ document.addEventListener('DOMContentLoaded', () => {
             { x: 25.75*16, y: 3.75*16, direction: 'up', stopDuration: 0 },
             { x: 25.75*16, y: 3.75*16, direction: 'right', stopDuration: 1000 },
         ],
+        boy3: [
+            { x: 32.25*16, y: 17.75*16, direction: 'up', stopDuration: 58000, hide: true, speed: 0.04, frameRate: 180 },
+            { x: 32.25*16, y: 17.75*16, direction: 'down', stopDuration: 17000, hide: true, speed: 0.04, frameRate: 180 },
+            { x: 32.25*16, y: 17.75*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },//door car
+            { x: 32.25*16, y: 18.75*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 32.25*16, y: 18.75*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 28.75*16, y: 18.75*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 28.75*16, y: 22.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 26.75*16, y: 22.25*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 26.75*16, y: 21.75*16, direction: 'up', stopDuration: 23000, hide: true, speed: 0.04, frameRate: 180 },
+            { x: 26.75*16, y: 21.75*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 26.75*16, y: 22.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 32.25*16, y: 22.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+        ],
         girl1: [
-            { x: 20.5*16, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 20.5*16, y: 300, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 20.5*16, y: 300, direction: 'right', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 20.5*16, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 20.5*16, y: 50, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 }
+            { x: 2.75*16, y: 6.5*16, direction: 'down', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 2.75*16, y: 6.5*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 5.75*16, y: 6.5*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 5.75*16, y: 6.5*16, direction: 'down', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 5.75*16, y: 2.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 5.75*16, y: 2.5*16, direction: 'right', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 5.75*16, y: 8.5*16, direction: 'down', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 2.75*16, y: 8.5*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 2.75*16, y: 6.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
         ],
         girl2: [
-            { x: 21.75*16, y: 10.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 21.75*16, y: 10.5*16, direction: 'left', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 21.75*16, y: 10.5*16, direction: 'up', stopDuration: 250, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 21.75*16, y: 10.5*16, direction: 'left', stopDuration: 10000, hide: false, speed: 0.04, frameRate: 180 },
             { x: 22.75*16, y: 10.5*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 22.75*16, y: 9.5*16, direction: 'up', stopDuration: 1000, hide: true, speed: 0.04, frameRate: 180 },
+            { x: 22.75*16, y: 9.5*16, direction: 'up', stopDuration: 15000, hide: true, speed: 0.04, frameRate: 180 },
             { x: 22.75*16, y: 9.5*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 22.75*16, y: 10.5*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 20.75*16, y: 10.5*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 20.75*16, y: 10.5*16, direction: 'right', stopDuration: 1250, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 10.5*16, direction: 'right', stopDuration: 4250, hide: false, speed: 0.04, frameRate: 180 },
             { x: 20.75*16, y: 11.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 11.75*16, y: 11.25*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 11.75*16, y: 10.25*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 11.75*16, y: 10.25*16, direction: 'left', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 11.75*16, y: 10.25*16, direction: 'left', stopDuration: 2000, hide: false, speed: 0.04, frameRate: 180 },
             { x: 11.75*16, y: 11.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 13.75*16, y: 11.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 13.75*16, y: 10.25*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 13.75*16, y: 10.25*16, direction: 'right', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 13.75*16, y: 10.25*16, direction: 'right', stopDuration: 5000, hide: false, speed: 0.04, frameRate: 180 },
             { x: 15.75*16, y: 10.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 15.75*16, y: 9.25*16, direction: 'up', stopDuration: 1250, hide: true, speed: 0.04, frameRate: 180 },
+            { x: 15.75*16, y: 9.25*16, direction: 'up', stopDuration: 18250, hide: true, speed: 0.04, frameRate: 180 },
             { x: 15.75*16, y: 9.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 15.75*16, y: 11.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 17.75*16, y: 11.25*16, direction: 'right', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
             { x: 18.75*16, y: 11.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 18.75*16, y: 15.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 20.75*16, y: 15.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 20.75*16, y: 20.25*16, direction: 'down', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 20.25*16, direction: 'down', stopDuration: 6000, hide: false, speed: 0.04, frameRate: 180 },
             { x: 20.75*16, y: 15.25*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 18.75*16, y: 15.25*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 18.75*16, y: 15.25*16, direction: 'up', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
-
-
-
-
-
-
-
-
-
-
+            { x: 18.75*16, y: 15.25*16, direction: 'up', stopDuration: 2000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 18.75*16, y: 11.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 21.75*16, y: 11.5*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
         ],
         kid1: [
             { x: 20.75*16, y: 10.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 20.75*16, y: 10.5*16, direction: 'right', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 10.5*16, direction: 'right', stopDuration: 10000, hide: false, speed: 0.04, frameRate: 180 },
             { x: 22.75*16, y: 10.5*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 22.75*16, y: 9.5*16, direction: 'up', stopDuration: 1250, hide: true, speed: 0.04, frameRate: 180 },
+            { x: 22.75*16, y: 9.5*16, direction: 'up', stopDuration: 15250, hide: true, speed: 0.04, frameRate: 180 },
             { x: 22.75*16, y: 9.5*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 22.75*16, y: 10.5*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 21.75*16, y: 10.5*16, direction: 'left', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 21.75*16, y: 10.5*16, direction: 'left', stopDuration: 4000, hide: false, speed: 0.04, frameRate: 180 },
             { x: 21.75*16, y: 11.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 11.75*16, y: 11.25*16, direction: 'left', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 11.75*16, y: 11.25*16, direction: 'left', stopDuration: 2000, hide: false, speed: 0.04, frameRate: 180 },
             { x: 14.75*16, y: 11.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 14.75*16, y: 10.25*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 14.75*16, y: 10.25*16, direction: 'left', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 14.75*16, y: 10.25*16, direction: 'left', stopDuration: 5000, hide: false, speed: 0.04, frameRate: 180 },
             { x: 15.75*16, y: 10.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 15.75*16, y: 9.25*16, direction: 'up', stopDuration: 1000, hide: true, speed: 0.04, frameRate: 180 },
+            { x: 15.75*16, y: 9.25*16, direction: 'up', stopDuration: 18000, hide: true, speed: 0.04, frameRate: 180 },
             { x: 15.75*16, y: 9.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 15.75*16, y: 11.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 18.75*16, y: 11.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
@@ -520,40 +506,67 @@ document.addEventListener('DOMContentLoaded', () => {
             { x: 18.75*16, y: 15.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 20.75*16, y: 15.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 20.75*16, y: 21.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 20.75*16, y: 21.25*16, direction: 'up', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 21.25*16, direction: 'up', stopDuration: 6000, hide: false, speed: 0.04, frameRate: 180 },
             { x: 20.75*16, y: 15.25*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 19.75*16, y: 15.25*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 19.75*16, y: 15.25*16, direction: 'up', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 19.75*16, y: 15.25*16, direction: 'up', stopDuration: 2000, hide: false, speed: 0.04, frameRate: 180 },
             { x: 18.75*16, y: 15.25*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-
-
-
-
-
-
-
-
-
-
-
-
+            { x: 18.75*16, y: 11.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 11.5*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
         ],
         man: [
-            { x: 100, y: 350, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 100, y: 200, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 200, y: 200, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 200, y: 350, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 100, y: 350, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 }
+            { x: 18.75*16, y: 11*16, direction: 'down', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 18.75*16, y: 15*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 19.75*16, y: 15.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 19.75*16, y: 18.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 19.75*16, y: 18.26*16, direction: 'right', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 24.75*16, y: 18.26*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 24.75*16, y: 15.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 31.75*16, y: 15.5*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 31.75*16, y: 16.05*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 33.55*16, y: 16.05*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 33.55*16, y: 15.25*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 33.55*16, y: 15.25*16, direction: 'left', stopDuration: 10000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 33.55*16, y: 15.25*16, direction: 'up', stopDuration: 2000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 33.55*16, y: 15.25*16, direction: 'left', stopDuration: 10000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 33.55*16, y: 15.25*16, direction: 'up', stopDuration: 2000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 33.55*16, y: 15.25*16, direction: 'left', stopDuration: 10000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 33.55*16, y: 15.25*16, direction: 'up', stopDuration: 2000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 33.55*16, y: 15.25*16, direction: 'left', stopDuration: 10000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 33.55*16, y: 15.25*16, direction: 'up', stopDuration: 2000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 33.55*16, y: 15.25*16, direction: 'left', stopDuration: Infinity, hide: false, speed: 0.04, frameRate: 180 },
         ],
         worker1: [
-            { x: 20, y: 20, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 20, y: 250, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 20, y: 20, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 }
+            { x: 11.75*16, y: -1*16, direction: 'down', stopDuration: 45000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 7.75*16, y: -1*16, direction: 'down', stopDuration: 35000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 7.75*16, y: 1*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 7.75*16, y: 3*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.1, frameRate: 180 },
+            { x: 7.75*16, y: 9.75*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.1, frameRate: 100 },
+            { x: 10.25*16, y: 9.75*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 10.25*16, y: 9.75*16, direction: 'down', stopDuration: 8000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 11.75*16, y: 9.75*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 11.75*16, y: -1*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
         ],
         worker2: [
-            { x: 500, y: 300, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 500, y: 100, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
-            { x: 500, y: 300, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 }
+            { x: 3.75*16, y: 23.5*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 3.75*16, y: 24.5*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 0.75*16, y: 24.5*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 0.75*16, y: 20.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 0.75*16, y: 20.5*16, direction: 'right', stopDuration: 5000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 0.75*16, y: 15.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 15.5*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 16.5*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 24.75*16, y: 16.5*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 24.75*16, y: 15.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 31.75*16, y: 15.5*16, direction: 'right', stopDuration: 8000, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 24.75*16, y: 15.5*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 24.75*16, y: 16.5*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 16.5*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 15.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 0.75*16, y: 15.5*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 0.75*16, y: 24.5*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 3.75*16, y: 24.5*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 3.75*16, y: 23.5*16, direction: 'up', stopDuration: 23000, hide: true, speed: 0.04, frameRate: 180 },
         ]
     };
 
@@ -597,6 +610,26 @@ document.addEventListener('DOMContentLoaded', () => {
             frameRate: 150,
             lastUpdateTime: 0,
             isHidden: false,
+            currentScale: BASE_SPRITE_SCALE_MULTIPLIER,
+        },
+        {
+            id: 'boy-walking-sprite-3',
+            element: boySprite3,
+            path: peoplePaths.boy3,
+            speed: 0.05,
+            currentWaypointIndex: 1,
+            currentX: 0,
+            currentY: 0,
+            startTime: null,
+            animationId: null,
+            isStopped: false,
+            stopUntil: 0,
+            type: 'boy',
+            currentFrameIndex: 0,
+            lastFrameTime: 0,
+            frameRate: 150,
+            lastUpdateTime: 0,
+            isHidden: true,
             currentScale: BASE_SPRITE_SCALE_MULTIPLIER,
         },
         {
@@ -664,7 +697,7 @@ document.addEventListener('DOMContentLoaded', () => {
             element: manSprite,
             path: peoplePaths.man,
             speed: 0.045,
-            currentWaypointIndex: 0,
+            currentWaypointIndex: 1,
             currentX: 0,
             currentY: 0,
             startTime: null,
@@ -684,7 +717,7 @@ document.addEventListener('DOMContentLoaded', () => {
             element: workerSprite1,
             path: peoplePaths.worker1,
             speed: 0.03,
-            currentWaypointIndex: 0,
+            currentWaypointIndex: 1,
             currentX: 0,
             currentY: 0,
             startTime: null,
@@ -704,7 +737,7 @@ document.addEventListener('DOMContentLoaded', () => {
             element: workerSprite2,
             path: peoplePaths.worker2,
             speed: 0.03,
-            currentWaypointIndex: 0,
+            currentWaypointIndex: 1,
             currentX: 0,
             currentY: 0,
             startTime: null,
@@ -716,7 +749,7 @@ document.addEventListener('DOMContentLoaded', () => {
             lastFrameTime: 0,
             frameRate: 200,
             lastUpdateTime: 0,
-            isHidden: true,
+            isHidden: false,
             currentScale: BASE_SPRITE_SCALE_MULTIPLIER
         },
     ];
@@ -760,7 +793,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 personData.animationId = requestAnimationFrame((ts) => animatePersonPath(personData, ts));
                 return;
             } else {
-                console.log(`${personData.id}: Stop ended. Resuming movement.`);
                 personData.isStopped = false;
                 personData.startTime = null;
                 personData.currentWaypointIndex = (personData.currentWaypointIndex + 1) % personData.path.length;
@@ -792,7 +824,6 @@ document.addEventListener('DOMContentLoaded', () => {
             personData.currentX = prevWaypoint.x * scaleX;
             personData.currentY = prevWaypoint.y * scaleY;
             updatePersonSpriteFrame(personData.element, targetWaypoint.direction, 0);
-            console.log(`${personData.id}: Segment #${personData.currentWaypointIndex} started. From (${prevWaypoint.x},${prevWaypoint.y}) to (${targetWaypoint.x},${targetWaypoint.y}).`);
         }
 
         // Calculate movement for this frame
@@ -828,32 +859,26 @@ document.addEventListener('DOMContentLoaded', () => {
             // Reached the waypoint
             personData.currentX = targetScaledX;
             personData.currentY = targetScaledY;
-            console.log(`${personData.id}: Reached waypoint ${personData.currentWaypointIndex}.`);
 
             // Handle visibility, speed, and frame rate changes at the waypoint
             if (typeof targetWaypoint.hide !== 'undefined') {
                 personData.isHidden = targetWaypoint.hide;
-                console.log(`${personData.id}: Visibility changed to ${personData.isHidden ? 'hidden' : 'visible'} at waypoint ${personData.currentWaypointIndex}.`);
             }
 
             if (typeof targetWaypoint.speed !== 'undefined') {
                 personData.speed = targetWaypoint.speed;
-                console.log(`${personData.id}: Speed changed to ${personData.speed} at waypoint ${personData.currentWaypointIndex}.`);
             }
 
             if (typeof targetWaypoint.frameRate !== 'undefined') {
                 personData.frameRate = targetWaypoint.frameRate;
-                console.log(`${personData.id}: Frame rate changed to ${personData.frameRate} at waypoint ${personData.currentWaypointIndex}.`);
             }
 
             // Handle stopping or moving to next waypoint
             if (targetWaypoint.stopDuration > 0) {
-                console.log(`${personData.id}: Stopping for ${targetWaypoint.stopDuration}ms.`);
                 personData.isStopped = true;
                 personData.stopUntil = currentTime + targetWaypoint.stopDuration;
                 updatePersonSpriteFrame(personData.element, targetWaypoint.direction, 0);
             } else {
-                console.log(`${personData.id}: Moving to next waypoint.`);
                 personData.currentWaypointIndex = (personData.currentWaypointIndex + 1) % personData.path.length;
                 personData.startTime = null;
                 personData.currentFrameIndex = 0;
