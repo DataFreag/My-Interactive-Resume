@@ -1,3 +1,15 @@
+// Sanity client setup
+import {createClient} from 'https://esm.sh/@sanity/client'
+
+const client = createClient({
+  projectId: 'zuw9r623',
+  dataset: 'production',
+  useCdn: true, // set to `false` to bypass the edge cache
+  apiVersion: '2025-09-07', // use current date (YYYY-MM-DD) to target the latest API version. Note: this should always be hard coded. Setting API version based on a dynamic value (e.g. new Date()) may break your application at a random point in the future.
+})
+
+
+// Main JavaScript Code for Interactive Resume
 document.addEventListener('DOMContentLoaded', () => {
     const mapContainer = document.getElementById('map-container');
     const resumeModal = document.getElementById('resume-modal');
@@ -1003,3 +1015,86 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// --- Data Fetching Functions ---
+
+const resumeContentCache = {};   // Dont forgot to remove older caches. TODO
+
+function preloadResumeContent() {
+    console.log("Starting to preload resume content from Sanity...");
+
+    // Use the imported client instance here instead of a locally defined one
+    const queryCertifications = `*[_type == "certifications"]{
+        title,
+        institution,
+        description,
+        certificationUrl,
+    }`;
+
+    const queryProjects = `*[_type == "project"]{
+        title,
+        projectStartDate,
+        projectEndDate,
+        status,
+        coverImage,
+        description,
+        technologies,
+        githubLink,
+        liveDemoLink
+    } | order(projectEndDate desc)`;
+
+    const queryWorkExperience = `*[_type == "work_experience"]{
+        title,
+        institution,
+        description,
+        startDate,
+        endDate,
+    } | order(startDate desc)`;
+
+    const queryEducation = `*[_type == "education"]{
+        title,
+        institution,
+        degreeType,
+        startDate,
+        endDate,
+        institutionCoverImage,
+        description,
+    } | order(startDate desc)`;
+
+    const querySkills = `*[_type == "skills"]{
+        title,
+        institution,
+        description,
+        proficiency,
+    }`;
+
+    return Promise.all([
+        client.fetch(queryCertifications).then(data => {
+            resumeContentCache.certifications = data;
+            console.log("Certifications data loaded:", data);
+        }),
+        client.fetch(queryProjects).then(data => {
+            resumeContentCache.projects = data;
+            console.log("Projects data loaded:", data);
+        }),
+        client.fetch(queryWorkExperience).then(data => {
+            resumeContentCache.workExperience = data;
+            console.log("Work experience data loaded:", data);
+        }),
+        client.fetch(queryEducation).then(data => {
+            resumeContentCache.education = data;
+            console.log("Education data loaded:", data);
+        }),
+        client.fetch(querySkills).then(data => {
+            resumeContentCache.skills = data;
+            console.log("Skills data loaded:", data);
+        })
+    ]).then(() => {
+        console.log("All resume content preloaded successfully.");
+    }).catch(error => {
+        console.error("Error preloading resume content:", error);
+        throw error; // Rethrow to be caught in the main initialization
+    });
+}
+
+preloadResumeContent(); // Call it here to start loading early

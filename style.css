@@ -125,7 +125,7 @@ html, body {
     height: 16px;
     background-repeat: no-repeat;
     overflow: hidden;
-    z-index: 6;
+    z-index: 11;
     transform-origin: bottom center;
     will-change: transform, left, top, background-position;
 }
