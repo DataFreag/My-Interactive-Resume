@@ -34,14 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const workerSprite1 = document.getElementById('worker-walking-sprite-1');
     const workerSprite2 = document.getElementById('worker-walking-sprite-2');
 
-    // Define resume content paths and IDs
-    const BUILDING_IDS = ['home', 'office', 'gallery', 'workshop', 'school', 'park'];
-    const RESUME_CONTENT_PATH = 'resume-sections/';
-
-    // Define your resume content here. (No changes from previous version)
-    // Cache for fetched resume content
-    const resumeContentCache = {};
-
     // Titles for the modal windows
     const resumeTitles = {
         home: "About Me & Contact",
@@ -52,22 +44,40 @@ document.addEventListener('DOMContentLoaded', () => {
         park: "Hobbies & Interests"
     };
 
-    // NEW showModal function
-    function showModal(section) {
+    // showModal function
+    async function showModal(section) {
         const title = resumeTitles[section];
-        const content = resumeContentCache[section];
+        const data = resumeContentCache[section];
 
-        if (title && content) {
-            // Set content first
-            modalTitle.textContent = title;
-            modalBody.innerHTML = content;
+        modalTitle.innerText = title || "Resume Section";
 
-            // Show the modal
-            resumeModal.classList.add('visible');
-
-        } else {
-            console.error(`Data for section "${section}" not found.`);
+        // Dynamic HTML content
+        let contentHTML = ""
+        switch(section) {
+            case 'home':
+                contentHTML = "<p>Do Home</p>";
+                break;
+            case 'office':
+                contentHTML = "create office content";
+                break;
+            case 'gallery':
+                contentHTML = "create gallery content";
+                break;
+            case 'workshop':
+                const { renderWorkshop } = await import('./renderers/workshopRenderer.js');
+                contentHTML = renderWorkshop(resumeContentCache.projects);
+                break;
+            case 'school':
+                contentHTML = "create school content";
+                break;
+            case 'park':
+                contentHTML = "create park content";
+                break;
+            default:
+                contentHTML = "<p>Error: Unknown section.</p>";
         }
+        modalBody.innerHTML = data || contentHTML;
+        resumeModal.classList.add('visible');
     }
 
     // hideModal function
@@ -218,33 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    function preloadResumeContent() {
-        console.log("Starting to preload resume content...");
-        const fetchPromises = BUILDING_IDS.map(id => {
-            const url = `${RESUME_CONTENT_PATH}${id}.html`;
-            return fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Network response was not ok for ${url}`);
-                    }
-                    return response.text();
-                })
-                .then(html => {
-                    resumeContentCache[id] = html;
-                    console.log(`Cached content for: ${id}.html`);
-                })
-                .catch(error => {
-                    console.error(`Failed to fetch and cache ${url}:`, error);
-                    resumeContentCache[id] = `<p>Error: Could not load content for this section.</p>`; // Provide fallback content
-                });
-        });
-
-        return Promise.all(fetchPromises).then(() => {
-            console.log("All resume content has been preloaded and cached.");
-        });
-    }
-
 
     // clickable area definitions
     const clickableAreaDefinitions = [
@@ -1041,9 +1024,9 @@ function preloadResumeContent() {
         technologies,
         githubLink,
         liveDemoLink
-    } | order(projectEndDate desc)`;
+    } | order(projectStartDate desc)`;
 
-    const queryWorkExperience = `*[_type == "work_experience"]{
+    const queryWorkExperience = `*[_type == "workExperience"]{
         title,
         institution,
         description,
