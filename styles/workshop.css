@@ -1,0 +1,392 @@
+/* styles/workshop.css */
+
+.modal-content {
+    overflow-y: auto;
+}
+
+.workshop-wrapper {
+    display: flex;
+    align-items: flex-start; /* Align items to the top */
+}
+
+/* --- Timeline Column (Left Side) --- */
+.timeline-column {
+    flex: 1 1 100%;
+    position: relative;
+    transition: flex-basis 0.5s ease-in-out;
+    padding-right: 2rem;
+    box-sizing: border-box;
+}
+
+.timeline-container {
+    position: relative;
+    width: 100%; /* Start at 100% width */
+    transition: width 0.5s ease-in-out;
+}
+
+/* --- Active State --- */
+.workshop-wrapper.timeline-active .timeline-column {
+    flex-basis: 50%;
+}
+.workshop-wrapper.timeline-active #project-detail-view {
+    flex-basis: 50%;
+    width: 50%; /* Explicitly set width for older browsers */
+    opacity: 1;
+}
+
+/* --- Detail View Panel (Right Side) --- */
+#project-detail-view {
+    flex: 0 0 0; /* Start with no width */
+    width: 0;
+    transition: width 0.5s ease-in-out, flex-basis 0.5s ease-in-out, opacity 0.3s ease-in;
+    opacity: 0;
+    
+    position: sticky;
+    top: 3rem;
+    height: calc(100vh - 6rem);
+    overflow-y: auto;
+    
+    padding-left: 40px;
+    box-sizing: border-box;
+}
+
+#project-detail-view.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Make the main timeline container flexible */
+.timeline-wrapper {
+    width: 100%;
+    transition: width 0.5s ease-in-out;
+}
+
+/* --- New styles for the compact layout --- */
+
+.timeline-item:first-child {
+    margin-top: 0; /* The first item doesn't need a negative margin */
+}
+
+/* --- New styles for the details panel --- */
+#project-detail-panel {
+    width: 0; /* Initially has no width */
+    opacity: 0; /* Initially hidden */
+    overflow: hidden;
+    transition: width 0.5s ease-in-out, opacity 0.5s ease-in-out 0.2s;
+}
+
+.detail-content {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 1rem;
+    /* Custom scrollbar for the panel */
+    scrollbar-width: thin;
+    scrollbar-color: #ffc107 #1a1a1a;
+}
+.detail-content::-webkit-scrollbar { width: 8px; }
+.detail-content::-webkit-scrollbar-track { background: #1a1a1a; }
+.detail-content::-webkit-scrollbar-thumb { background-color: #ffc107; }
+
+
+/* The central vertical line of the timeline */
+.timeline-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* --- Timeline Item Adjustments --- */
+/* Keep the absolute positioning for the compact layout */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.timeline-item {
+    position: absolute;
+    width: calc(50% - 40px);
+    transition: top 0.5s ease-in-out, left 0.5s ease-in-out, width 0.5s ease-in-out; /* Add width transition */
+    cursor: pointer;
+    opacity: 0; /* Start hidden */
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Position odd items on the LEFT */
+.timeline-item:nth-child(odd) {
+    left: 0;
+}
+.timeline-item:nth-child(even) {
+    left: calc(50% + 40px);
+}
+
+/* The circle on the timeline for each item */
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #000;
+    border: 4px solid #87CEEB;
+    border-radius: 50%;
+    top: 30px;
+    z-index: 1;
+}
+
+.timeline-item.active .timeline-content {
+    border-color: #ffc107;
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.3);
+}
+
+/* Add a close button for the detail view */
+.detail-close-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+/* When active, all items stack left and take up the new full width of the container */
+.workshop-wrapper.timeline-active .timeline-item {
+    left: 0 !important;
+    width: calc(100% - 40px); /* 100% of the new 50% container width */
+}
+.timeline-active .timeline-item:nth-child(even) {
+     /* We need to override the initial 'left: 50%' */
+    left: 0 !important;
+}
+
+.timeline-item:nth-child(odd)::after {
+    right: -14px;
+}
+
+.timeline-item:nth-child(even)::after {
+    left: -14px;
+}
+
+/* The content box for each project */
+.timeline-content {
+    padding: 20px 30px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    border-radius: 6px;
+}
+
+.section-title {
+    font-size: 1.2rem;
+    margin-top: 3rem;
+    color: #87CEEB;
+}
+
+.timeline-date {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: -10px;
+    margin-bottom: 1rem;
+}
+
+.project-description p {
+    margin: 0 0 1rem 0;
+}
+
+.tech-container {
+    margin: 1.5rem 0;
+}
+
+.tech-tag {
+    display: inline-block;
+    background-color: rgba(135, 206, 235, 0.15);
+    color: #87CEEB;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin: 0 5px 5px 0;
+}
+
+/* Position tech tags based on card alignment */
+.timeline-item:nth-child(odd) .tech-container {
+    justify-content: flex-end;
+    display: flex;
+    flex-wrap: wrap;
+}
+.timeline-item:nth-child(even) .tech-container {
+    justify-content: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.project-links a.timeline-button {
+    background: none;
+    border: 2px solid #87CEEB;
+    color: #87CEEB;
+    padding: 8px 16px;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 5px;
+    display: inline-block;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.project-links a.timeline-button:hover {
+    background-color: #87CEEB;
+    color: #000;
+}
+
+/* Responsive adjustments for smaller screens */
+@media screen and (max-width: 768px) {
+    .timeline-container::before {
+        left: 31px;
+    }
+    .timeline-item, .timeline-item:nth-child(even) {
+        width: 100%;
+        left: 0;
+        padding-left: 80px;
+        padding-right: 25px;
+        text-align: left;
+    }
+    .timeline-item::after, .timeline-item:nth-child(even)::after {
+        left: 17px;
+    }
+    .timeline-item:nth-child(odd) .tech-container {
+        justify-content: flex-start;
+    }
+}
+
+/* Add to styles/workshop.css */
+.timeline-item .timeline-content {
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.timeline-item:hover .timeline-content {
+    transform: translateY(-5px) scale(1.02);
+    border-color: #ffc107; /* Use your yellow accent color */
+}
+
+#timeline-connector {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 15px solid #ffc107; /* Use an accent color */
+    
+    /* Start hidden and transition smoothly */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, top 0.5s ease;
+    
+    /* Position it between the two columns */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+
+    transform: translateX(-50%) scaleX(0); /* Start with zero width */
+    transform-origin: right center; /* Animate from the right edge */
+    transition: opacity 0.3s ease, top 0.5s ease, transform 0.3s ease;
+}
+
+#timeline-connector.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) scaleX(1);
+}
+
+/* --- SCOPED DIGITAL BLUEPRINT THEME --- */
+.workshop-theme .modal-content {
+    --blueprint-blue: #007BFF;
+    --text-dark: #212529;
+    --status-green: #28A745;
+    --paper-bg: #F8F9FA;
+    
+    background-color: var(--paper-bg);
+    color: var(--text-dark);
+    background-image: 
+        linear-gradient(rgba(0, 123, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 123, 255, 0.1) 1px, transparent 1px);
+    background-size: 35px 35px;
+}
+
+.workshop-theme #modal-title {
+    color: var(--blueprint-blue);
+}
+
+.workshop-theme .modal-close-btn {
+    color: var(--text-dark);
+}
+
+.workshop-theme .timeline-container::before {
+    background-color: rgba(0, 123, 255, 0.3);
+}
+
+.workshop-theme .timeline-item::after {
+    background-color: var(--paper-bg);
+    border-color: var(--blueprint-blue);
+}
+
+.workshop-theme .timeline-content {
+    background-color: #FFFFFF;
+    border: 1px solid #DEE2E6;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.workshop-theme .timeline-item.active .timeline-content {
+    border: 2px solid var(--blueprint-blue);
+    box-shadow: 0 8px 24px rgba(0, 123, 255, 0.2);
+}
+
+.workshop-theme .section-title {
+    color: var(--text-dark);
+    border-left: 4px solid var(--blueprint-blue);
+}
+
+.workshop-theme .tech-tag {
+    background-color: rgba(0, 123, 255, 0.1);
+    color: var(--blueprint-blue);
+}
+
+.workshop-theme .timeline-status.completed {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: var(--status-green);
+}
+
+.workshop-theme .timeline-status.in-progress {
+    background-color: rgba(255, 193, 7, 0.15);
+    color: #B38600;
+}
+
+.workshop-theme .project-links a.timeline-button {
+    background: var(--blueprint-blue);
+    color: #fff;
+}
+.workshop-theme .project-links a.timeline-button:hover {
+    background-color: #0056b3;
+}
+
+.workshop-theme #timeline-connector {
+    background-color: var(--blueprint-blue);
+}
+
+/* --- (Keep all layout styles, but prefix the main wrapper) --- */
+.workshop-theme .workshop-wrapper {
+    display: flex;
+    align-items: flex-start;
+    height: 100%;
+}
+
+.pixel-heading {
+    font-family: var(--font-pixel);
+    text-transform: uppercase;
+    color: #000000;
+}

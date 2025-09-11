@@ -140,53 +140,48 @@ html, body {
 #man-walking-sprite { background-image: url('anim/people/man.png'); }
 #worker-walking-sprite-1, #worker-walking-sprite-2 { background-image: url('anim/people/worker.png'); }
 
+
+/* --- Modal Styles --- */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+    --font-pixel: 'Press Start 2P';
+}
+
 /* This is the main full-screen container */
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
     z-index: 1000;
-    background-color: #000; /* Solid black fallback */
+    background-color: rgba(0, 0, 0, 0.75);
     
     /* Controls visibility */
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.5s ease-out, visibility 0s 0.5s;
+    transition: opacity 0.3s ease-out, visibility 0s 0.3s;
 }
 
 .modal-overlay.visible {
     opacity: 1;
     visibility: visible;
-    transition: opacity 0.5s ease-out;
-}
-
-/* The video that plays BEHIND the content */
-.modal-background-video {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    z-index: 1; /* Sits behind the modal content */
-    opacity: 0.7; /* Optional: slightly dim the video */
+    transition: opacity 0.3s ease-out;
 }
 
 /* The content container that sits ON TOP of the video */
 .modal-content {
-    position: relative; /* Must be relative to use z-index */
-    z-index: 2; /* Ensures content is on top of the video */
+    background-color: #000000;
+    color: #ffffff;
     width: 100%;
     height: 100%;
-    padding: 4rem 5rem; /* More padding for a spacious feel */
+    padding: 3rem 4rem; 
     box-sizing: border-box;
-    overflow-y: auto; /* Allow scrolling for long content */
-    background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
-    color: #ffffff; /* White text for contrast */
+    overflow-y: auto;
+    position: relative;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 /* Updated close button for the new design */
@@ -210,24 +205,27 @@ html, body {
 
 /* Updated text styles for the new design */
 #modal-title {
+    font-family: var(--font-pixel);
+    font-size: 2rem;
     color: #ffffff;
-    font-size: 3rem; /* Larger title */
-    font-weight: 700;
-    margin-bottom: 2rem;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.5); /* Underline effect */
-    padding-bottom: 1rem;
+    text-align: center;
+    margin-bottom: 3rem;
 }
 
 #modal-body {
-    line-height: 1.7;
+    font-family: 'Inter', sans-serif; 
     font-size: 1.1rem;
-    max-width: 900px; /* Constrain line length for readability */
+    line-height: 1.8;
 }
 
 /* Ensure links in the modal are also visible */
 #modal-body a {
-    color: #87CEEB; /* A nice light blue for links */
-    text-decoration: underline;
+    color: #87CEEB;
+    border-bottom: 2px solid #87CEEB;
+    text-decoration: none;
+}
+#modal-body a:hover {
+    background-color: rgba(135, 206, 235, 0.1);
 }
 
 /* Tailwind-like classes */

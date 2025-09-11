@@ -46,6 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // showModal function
     async function showModal(section) {
+        // Clear previous content and theme classes
+        resumeModal.classList.remove('workshop-theme', 'another-theme-class');
+        // Add a specific theme class based on the section.
+        if (section === 'workshop') {
+            resumeModal.classList.add('workshop-theme');
+    }
+
         const title = resumeTitles[section];
         const data = resumeContentCache[section];
 
@@ -55,23 +62,28 @@ document.addEventListener('DOMContentLoaded', () => {
         let contentHTML = ""
         switch(section) {
             case 'home':
-                contentHTML = "<p>Do Home</p>";
+                const { renderHome } = await import('./renderers/homeRenderer.js');
+                contentHTML = renderHome();
                 break;
             case 'office':
-                contentHTML = "create office content";
+                const { renderOffice } = await import('./renderers/officeRenderer.js');
+                contentHTML = renderOffice(resumeContentCache.workExperience);
                 break;
             case 'gallery':
-                contentHTML = "create gallery content";
+                const { renderGallery } = await import('./renderers/galleryRenderer.js');
+                contentHTML = renderGallery(resumeContentCache.skills, resumeContentCache.certifications);
                 break;
             case 'workshop':
                 const { renderWorkshop } = await import('./renderers/workshopRenderer.js');
                 contentHTML = renderWorkshop(resumeContentCache.projects);
                 break;
             case 'school':
-                contentHTML = "create school content";
+                const { renderSchool } = await import('./renderers/schoolRenderer.js');
+                contentHTML = renderSchool(resumeContentCache.education);
                 break;
             case 'park':
-                contentHTML = "create park content";
+                const { renderPark } = await import('./renderers/parkRenderer.js');
+                contentHTML = renderPark();
                 break;
             default:
                 contentHTML = "<p>Error: Unknown section.</p>";
@@ -84,6 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function hideModal() {
         // Hide the modal
         resumeModal.classList.remove('visible');
+
+        setTimeout(() => {
+            resumeModal.classList.remove('workshop-theme');
+        }, 500);
     }
 
     // Event listeners for modal close (No changes)
@@ -1018,9 +1034,9 @@ function preloadResumeContent() {
         title,
         projectStartDate,
         projectEndDate,
-        status,
         coverImage,
-        description,
+        shortDescription,
+        longDescription,
         technologies,
         githubLink,
         liveDemoLink
@@ -1076,8 +1092,6 @@ function preloadResumeContent() {
         console.log("All resume content preloaded successfully.");
     }).catch(error => {
         console.error("Error preloading resume content:", error);
-        throw error; // Rethrow to be caught in the main initialization
+        throw error;
     });
 }
-
-preloadResumeContent(); // Call it here to start loading early
