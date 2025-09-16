@@ -39,8 +39,22 @@ export function renderWorkshop(projects) {
     setTimeout(() => {
         const workshopWrapper = document.querySelector('.workshop-wrapper');
         const detailView = document.getElementById('project-detail-view');
-        positionTimelineItems();
         setupLazyLoading();
+        // Wait for all lazy images to be loaded before positioning timeline items
+        const lazyImages = document.querySelectorAll('.lazy');
+        if (lazyImages.length === 0) {
+            positionTimelineItems();
+        } else {
+            let loadedCount = 0;
+            lazyImages.forEach(img => {
+            img.addEventListener('load', () => {
+                loadedCount++;
+                if (loadedCount === lazyImages.length) {
+                positionTimelineItems();
+                }
+            }, { once: true });
+            });
+        }
         setupClickListeners(projects, workshopWrapper, detailView);
     }, 0);
 
@@ -50,11 +64,11 @@ export function renderWorkshop(projects) {
 function createProjectCardHTML(project) {
     const startDate = new Date(project.projectStartDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
     const endDate = project.projectEndDate ? new Date(project.projectEndDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) : 'In-Progress';
-
+    console.log(project.shortDescription);
     return `
         <div class="timeline-item" data-project-id="${project.title}">
             <div class="timeline-content">
-                <img data-src="${project.coverImage?.asset?.url || ''}" class="project-cover-image lazy" alt="${project.title} cover">
+                <img data-src="https://www.mygreatlearning.com/blog/wp-content/uploads/2025/04/rag.jpg" class="project-cover-image lazy" alt="${project.title} cover">
                 <h3 class="pixel-heading">${project.title}</h3>
                 <div class="timeline-date">${startDate} - ${endDate}</div>
                 <p>${project.shortDescription || ''}</p>

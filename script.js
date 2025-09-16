@@ -1065,6 +1065,7 @@ function preloadResumeContent() {
         institution,
         description,
         proficiency,
+        "imageUrl": image.asset->url,
     }`;
 
     return Promise.all([

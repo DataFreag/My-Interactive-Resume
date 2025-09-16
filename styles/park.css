@@ -1,0 +1,45 @@
+/* styles/park.css */
+
+/* --- Scoped Theme for the Park Modal --- */
+.park-modal-active #modal-body {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Main Dashboard Layout --- */
+.dashboard-grid {
+    display: grid;
+    /* Create responsive columns: they will be at least 350px wide */
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+/* --- Individual Card Styling --- */
+.hobby-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 2rem;
+}
+
+.hobby-card .pixel-heading {
+    font-size: 1.2rem;
+    color: #87CEEB; /* Use the accent link color for card titles */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.hobby-card p {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.placeholder-text {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+}

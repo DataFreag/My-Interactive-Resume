@@ -1,0 +1,131 @@
+/* styles/home.css */
+
+/* --- Scoped Theme for the Home Modal --- */
+.home-modal-active #modal-body {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* --- Main Layout --- */
+.profile-wrapper {
+    display: flex;
+    gap: 2rem;
+    height: 100%;
+}
+
+.profile-sidebar {
+    flex: 0 0 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.profile-main-content {
+    flex: 1 1 auto; /* Take up the remaining space */
+}
+
+/* --- Left Column: Picture & Stats --- */
+.profile-picture {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.profile-stats {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.stat-item {
+    margin-bottom: 1.25rem;
+}
+.stat-item:last-child {
+    margin-bottom: 0;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.8rem !important; /* Override .pixel-heading size */
+    color: #87CEEB !important; /* Use link color for labels */
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 1.1rem;
+}
+
+.stat-value.status-available {
+    color: #28a745; /* Green color for availability */
+    font-weight: bold;
+}
+
+/* --- Right Column: Tabs --- */
+.tab-buttons {
+    display: flex;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s, border-bottom 0.2s;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px; /* Align with the container's bottom border */
+}
+
+.tab-btn:hover {
+    color: #fff;
+}
+
+.tab-btn.active {
+    color: #87CEEB;
+    border-bottom-color: #87CEEB;
+}
+
+.tab-panel {
+    display: none; /* Hide all panels by default */
+}
+
+.tab-panel.active {
+    display: block; /* Show only the active one */
+    animation: fadeIn 0.5s ease-in-out; /* Add a fade-in effect */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.tab-panel ul {
+    list-style-type: '✔  '; /* Thematic bullet points */
+    padding-left: 1.5rem;
+}
+.tab-panel li {
+    margin-bottom: 1rem;
+}
+
+.contact-links {
+    display: flex;
+    gap: 1rem;
+}
+.contact-link {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
+    border: none;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+.contact-link:hover {
+    background-color: rgba(135, 206, 235, 0.2);
+}
