@@ -1,31 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 /* --- Preloader Styles --- */
 .preloader-overlay {
-    position: fixed; /* Covers the entire viewport */
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #000; /* Solid black background */
-    z-index: 9999; /* Ensures it's on top of everything */
-    display: flex; /* Use flexbox for centering content */
-    flex-direction: column; /* Stack spinner and text vertically */
-    justify-content: center; /* Center vertically */
-    align-items: center; /* Center horizontally */
-    color: #fff; /* White text color */
-    font-family: 'Press Start 2P', cursive; /* Match your pixel font if you have it */
+    background-color: #000; 
+    z-index: 9999; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    color: #fff; 
+    font-family: 'Press Start 2P', cursive; 
     font-size: 1.2em;
-    transition: opacity 0.5s ease-out, visibility 0.5s ease-out; /* Smooth fade-out effect */
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out; 
 }
 
-/* Optional: Styles for the preloader spinner */
+
 .preloader-spinner {
-    border: 8px solid rgba(255, 255, 255, 0.3); /* Light border */
-    border-top: 8px solid #fff; /* Solid white top border for animation */
-    border-radius: 50%; /* Make it round */
+    border: 8px solid rgba(255, 255, 255, 0.3); 
+    border-top: 8px solid #fff; 
+    border-radius: 50%; 
     width: 60px;
     height: 60px;
-    animation: spin 1.5s linear infinite; /* Spin animation */
-    margin-bottom: 20px; /* Space between spinner and text */
+    animation: spin 1.5s linear infinite; 
+    margin-bottom: 20px; 
 }
 
 @keyframes spin {
@@ -33,11 +35,11 @@
     100% { transform: rotate(360deg); }
 }
 
-/* Class to hide the preloader after loading */
+
 .preloader-overlay.hidden {
     opacity: 0;
     visibility: hidden;
-    pointer-events: none; /* Prevents interaction with hidden overlay */
+    pointer-events: none; 
 }
 
 /* --- Global Resets & True Full Viewport Fill --- */
@@ -46,20 +48,20 @@ html, body {
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden; /* Prevent scrollbars */
+    overflow: hidden; 
     font-family: 'Inter', sans-serif;
-    background-color: #000000; /* This color will show in the "letterbox" areas */
+    background-color: #000000; 
 
-    position: fixed; /* Fixes html/body to the viewport, ignoring scrollbar calculations */
+    position: fixed; 
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
 
-    /* Use flexbox to center map-container within this fixed viewport */
+    
     display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center;   /* Center vertically */
+    justify-content: center; 
+    align-items: center;   
 }
 
 /* --- Main Map Container --- */
@@ -68,27 +70,24 @@ html, body {
  
     width: min(100vw, calc(100vh * (544 / 384)));
     height: min(100vh, calc(100vw * (384 / 544)));
-
-    /* The aspect-ratio property is still useful as a fallback/reinforcer,
-       but the width/height calculations above are doing the heavy lifting. */
     aspect-ratio: 544 / 384; 
     
-    /* Ensure flex items don't overflow when they have intrinsic aspect ratios */
+    
     min-width: 0; 
     min-height: 0;
     
     background-image: url('map.png');
-    background-size: contain; /* Ensure the full map image is visible within the container */
+    background-size: contain; 
     background-position: top center;
     background-repeat: no-repeat;
     border-radius: 0;
     box-shadow: none;
-    overflow: hidden; /* Crucial to clip any content that goes beyond the container */
-    margin: auto; /* Re-add auto margin with flexbox if using max-width/height */
+    overflow: hidden; 
+    margin: auto; 
     z-index: 1;
-}
 
-/* ... (rest of your CSS for clickable-area, cars, sprites, modal remain the same) ... */
+    transition: filter 0.4s ease-out, transform 0.4s ease-out;
+}
 
 .clickable-area {
     position: absolute;
@@ -140,24 +139,19 @@ html, body {
 #man-walking-sprite { background-image: url('anim/people/man.png'); }
 #worker-walking-sprite-1, #worker-walking-sprite-2 { background-image: url('anim/people/worker.png'); }
 
-
-/* --- Modal Styles --- */
-
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
 :root {
     --font-pixel: 'Press Start 2P';
 }
 
-/* This is the main full-screen container */
+
 .modal-overlay {
     position: fixed;
-    width: 95%;
-    height: 95%;
+    width: 100%;
+    height: 100%;
     z-index: 1000;
     background-color: rgba(0, 0, 0, 0.75);
     
-    /* Controls visibility */
+    
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease-out, visibility 0s 0.3s;
@@ -169,9 +163,12 @@ html, body {
     transition: opacity 0.3s ease-out;
 }
 
-/* The content container that sits ON TOP of the video */
+.modal-overlay.visible ~ #map-container {
+    filter: blur(8px);
+    transform: scale(1.05);
+}
+
 .modal-content {
-    background-color: #000000;
     color: #ffffff;
     width: 100%;
     height: 100%;
@@ -182,9 +179,22 @@ html, body {
     border: none;
     border-radius: 0;
     box-shadow: none;
+    position: relative; 
+    isolation: isolate; 
+    background-color: transparent;
 }
 
-/* Updated close button for the new design */
+.modal-content::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    
+    background-color: rgba(10, 10, 20, 0.7); 
+    backdrop-filter: blur(5px); 
+    z-index: -1; 
+}
+
+
 .modal-close-btn {
     position: absolute;
     top: 2rem;
@@ -203,7 +213,7 @@ html, body {
     transform: scale(1.1);
 }
 
-/* Updated text styles for the new design */
+
 #modal-title {
     font-family: var(--font-pixel);
     font-size: 2rem;
@@ -218,7 +228,7 @@ html, body {
     line-height: 1.8;
 }
 
-/* Ensure links in the modal are also visible */
+
 #modal-body a {
     color: #87CEEB;
     border-bottom: 2px solid #87CEEB;
@@ -227,14 +237,3 @@ html, body {
 #modal-body a:hover {
     background-color: rgba(135, 206, 235, 0.1);
 }
-
-/* Tailwind-like classes */
-.text-3xl { font-size: 2.25rem; }
-.font-bold { font-weight: 700; }
-.text-center { text-align: center; }
-.mb-6 { margin-bottom: 1.5rem; }
-.text-2xl { font-size: 1.875rem; }
-.font-semibold { font-weight: 600; }
-.mb-4 { margin-bottom: 1rem; }
-.text-base { font-size: 1rem; }
-.leading-relaxed { line-height: 1.625; }

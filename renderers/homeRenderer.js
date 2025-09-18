@@ -1,16 +1,12 @@
-/**
- * Generates HTML for the projects section.
- */
 // renderers/homeRenderer.js
 
-// --- 1. YOUR PERSONAL DATA ---
-// Update this object with your own details.
+// --- PERSONAL DATA ---
 const profileData = {
     name: "Your Name",
     role: "Role Role Role",
     location: "Ames, Iowa",
     status: "Open to new opportunities",
-    profilePicUrl: "https://via.placeholder.com/250", // TODO: Replace with a URL to your actual photo
+    profilePicUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuNhTZJTtkR6b-ADMhmzPvVwaLuLdz273wvQ&s", // TODO: Replace with a URL to your actual photo
     bio: `BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO BIO `,
     contact: {
         email: "mailto:your.email@example.com",
@@ -25,12 +21,11 @@ const profileData = {
     ]
 };
 
-
 /**
  * Renders the entire HTML structure for the "Home" (About Me) modal.
  */
 export function renderHome() {
-    // --- 2. GENERATE THE HTML ---
+    // --- GENERATE THE HTML ---
     const highlightsHTML = profileData.highlights.map(item => `<li>${item}</li>`).join('');
 
     const homeHTML = `
@@ -85,19 +80,19 @@ export function renderHome() {
         </div>
     `;
 
-    // --- 3. ATTACH EVENT LISTENERS ---
-    // We use a timeout to ensure the HTML is in the DOM before we add listeners.
+    // --- ATTACH EVENT LISTENERS ---
+    
     setTimeout(() => {
         const tabButtons = document.querySelectorAll('.tab-btn');
         const tabPanels = document.querySelectorAll('.tab-panel');
 
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
-                // Remove active class from all buttons and panels
+                
                 tabButtons.forEach(btn => btn.classList.remove('active'));
                 tabPanels.forEach(panel => panel.classList.remove('active'));
 
-                // Add active class to the clicked button and corresponding panel
+                
                 button.classList.add('active');
                 const tabId = button.dataset.tab;
                 document.getElementById(tabId).classList.add('active');

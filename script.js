@@ -4,12 +4,12 @@ import {createClient} from 'https://esm.sh/@sanity/client'
 const client = createClient({
   projectId: 'zuw9r623',
   dataset: 'production',
-  useCdn: true, // set to `false` to bypass the edge cache
-  apiVersion: '2025-09-07', // use current date (YYYY-MM-DD) to target the latest API version. Note: this should always be hard coded. Setting API version based on a dynamic value (e.g. new Date()) may break your application at a random point in the future.
+  useCdn: true,
+  apiVersion: '2025-09-07',
 })
 
 
-// Main JavaScript Code for Interactive Resume
+
 document.addEventListener('DOMContentLoaded', () => {
     const mapContainer = document.getElementById('map-container');
     const resumeModal = document.getElementById('resume-modal');
@@ -17,12 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalBody = document.getElementById('modal-body');
     const modalCloseBtn = document.querySelector('.modal-close-btn');
 
-    // Get references to all car elements
+    
     const taxiCar = document.getElementById('taxi-moving-car');
     const redCar = document.getElementById('red-moving-car');
     const greenCar = document.getElementById('green-moving-car');
 
-    // Get references to all walking sprite elements
+    
     const boySprite1 = document.getElementById('boy-walking-sprite-1');
     const boySprite2 = document.getElementById('boy-walking-sprite-2');
     const boySprite3 = document.getElementById('boy-walking-sprite-3');
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const workerSprite1 = document.getElementById('worker-walking-sprite-1');
     const workerSprite2 = document.getElementById('worker-walking-sprite-2');
 
-    // Titles for the modal windows
+    
     const resumeTitles = {
         home: "About Me & Contact",
         office: "Work Experience",
@@ -44,21 +44,30 @@ document.addEventListener('DOMContentLoaded', () => {
         park: "Hobbies & Interests"
     };
 
-    // showModal function
+    
     async function showModal(section) {
-        // Clear previous content and theme classes
-        resumeModal.classList.remove('workshop-theme', 'another-theme-class');
-        // Add a specific theme class based on the section.
+        resumeModal.classList.remove('workshop-theme', 'school-theme', 'gallery-theme', 'office-theme', 'park-theme', 'home-theme');
+        
         if (section === 'workshop') {
             resumeModal.classList.add('workshop-theme');
-    }
+        } else if (section === 'school') {
+            resumeModal.classList.add('school-theme');
+        } else if (section === 'gallery') {
+            resumeModal.classList.add('gallery-theme');
+        } else if (section === 'office') {
+            resumeModal.classList.add('office-theme');
+        } else if (section === 'park') {
+            resumeModal.classList.add('park-theme');
+        } else if (section === 'home') {
+            resumeModal.classList.add('home-theme');
+        }
 
         const title = resumeTitles[section];
         const data = resumeContentCache[section];
 
         modalTitle.innerText = title || "Resume Section";
 
-        // Dynamic HTML content
+        
         let contentHTML = ""
         switch(section) {
             case 'home':
@@ -92,9 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
         resumeModal.classList.add('visible');
     }
 
-    // hideModal function
+    
     function hideModal() {
-        // Hide the modal
         resumeModal.classList.remove('visible');
 
         setTimeout(() => {
@@ -102,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500);
     }
 
-    // Event listeners for modal close (No changes)
+    
     modalCloseBtn.addEventListener('click', hideModal);
     resumeModal.addEventListener('click', (event) => {
         if (event.target === resumeModal) {
@@ -111,13 +119,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('keydown', (event) => {
-        // Check if the Escape key was pressed and if the modal is currently visible
+        
         if (event.key === 'Escape' && resumeModal.classList.contains('visible')) {
             hideModal();
         }
     });
 
-    // --- Animation Logic for Clickable Areas (No changes) ---
+    // --- Animation Logic for Clickable Areas---
     let activeAreaAnimation = null;
 
     function animateClickableArea(element, duration = 300, scaleFactor = 1.05) {
@@ -157,23 +165,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         activeAreaAnimation = requestAnimationFrame(animate);
     }
-    // --- End Animation Logic for Clickable Areas ---
+    
 
 
     // --- JavaScript Animation Logic for City using requestAnimationFrame ---
-    // Define sprite sheet configurations
+    
     const SPRITE_FRAME_WIDTH = 16; 
     const SPRITE_FRAME_HEIGHT = 16;
     const SPRITE_SHEET_COLS = 3;
 
-    // Add these constants near the top
     const BASE_CAR_WIDTH = 32;
     const BASE_CAR_HEIGHT = 32;
     const BASE_SPRITE_WIDTH = 16;
     const BASE_SPRITE_HEIGHT = 16;
     const BASE_SPRITE_SCALE_MULTIPLIER = 1;
 
-    // Define the frame indices for each direction and step within your sprite sheet
     const WALK_FRAMES = {
         'left': [0, 1, 2],
         'down': [3, 4, 5],
@@ -181,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'right': [9, 10, 11]
     };
 
-    // Preload people sprite sheets
+    
     const peopleImagePaths = {
         'boy-walk': 'anim/people/boy.png',
         'girl-walk': 'anim/people/girl.png',
@@ -189,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'worker-walk': 'anim/people/worker.png',
     };
 
-    // Preload car images to ensure smooth swapping
+    
     const carImagePaths = {
         'taxi-right': 'anim/car/taxi-right.png',
         'taxi-left': 'anim/car/taxi-left.png',
@@ -290,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
     };
 
-    // Store animation details for each car instance
+    
     const carInstances = [
         { id: 'taxi-moving-car', element: taxiCar, path: carPaths.taxi, speed: 0.05, currentWaypointIndex: 1, currentX: 0, currentY: 0, startTime: null, animationId: null, isStopped: false, stopUntil: 0, type: 'taxi' },
         { id: 'red-moving-car', element: redCar, path: carPaths.red, speed: 0.05, currentWaypointIndex: 1, currentX: 0, currentY: 0, startTime: null, animationId: null, isStopped: false, stopUntil: 0, type: 'red' },
@@ -317,7 +323,6 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {DOMHighResTimeStamp} currentTime The current time provided by requestAnimationFrame.
      */
     function animateCarPath(carData, currentTime) {
-        // If the car is supposed to be stopped, check if stop duration has passed
         if (carData.isStopped) {
             if (currentTime < carData.stopUntil) {
                 carData.animationId = requestAnimationFrame((ts) => animateCarPath(carData, ts));
@@ -329,22 +334,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Determine the current segment's start and end waypoints
         const prevWaypointIndex = (carData.currentWaypointIndex === 0) ? carData.path.length - 1 : carData.currentWaypointIndex - 1;
         const prevWaypoint = carData.path[prevWaypointIndex];
         const targetWaypoint = carData.path[carData.currentWaypointIndex];
 
-        // Ensure startTime is set for the current segment
+        
         if (!carData.startTime) {
             carData.startTime = currentTime;
-            // Set initial position to the previous waypoint
             carData.currentX = prevWaypoint.x;
             carData.currentY = prevWaypoint.y;
-            //  Update the car's image based on the initial direction
             updateCarImage(carData.element, carData.type, targetWaypoint.direction);
         }
 
-        // Get scaled map dimensions
+        
         const mapContainerWidth = mapContainer.offsetWidth;
         const mapContainerHeight = mapContainer.offsetHeight;
         const originalMapWidth = parseFloat(mapContainer.dataset.originalMapWidth);
@@ -352,39 +354,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const scaleX = mapContainerWidth / originalMapWidth;
         const scaleY = mapContainerHeight / originalMapHeight;
 
-        // Calculate scaled positions for the waypoints
         const prevScaledX = prevWaypoint.x * scaleX;
         const prevScaledY = prevWaypoint.y * scaleY;
         const targetScaledX = targetWaypoint.x * scaleX;
         const targetScaledY = targetWaypoint.y * scaleY;
 
-        // Calculate distance for the current segment
         const segmentDx = targetScaledX - prevScaledX;
         const segmentDy = targetScaledY - prevScaledY;
         const segmentDistance = Math.sqrt(segmentDx * segmentDx + segmentDy * segmentDy);
 
-        // Calculate elapsed time since the start of the segment
         const segmentElapsedTime = currentTime - carData.startTime;
 
-        // Calculate progress based on speed and elapsed time
         let segmentProgress = 0;
         if (segmentDistance > 0) {
             segmentProgress = Math.min((carData.speed * segmentElapsedTime) / segmentDistance, 1);
         }
 
-        // Calculate the new position of the car based on progress
         carData.currentX = prevScaledX + segmentDx * segmentProgress;
         carData.currentY = prevScaledY + segmentDy * segmentProgress;
 
-        // Update car's visual position
         carData.element.style.left = `${carData.currentX}px`;
         carData.element.style.top = `${carData.currentY}px`;
         carData.element.style.transform = `translate(-50%, -50%)`;
 
 
-        // Update the car's image based on its direction
+        
         if (segmentProgress >= 1) {
-            // Car has reached the target waypoint, update position to exact target
+            
             carData.currentX = targetScaledX;
             carData.currentY = targetScaledY;
 
@@ -392,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 carData.isStopped = true;
                 carData.stopUntil = currentTime + targetWaypoint.stopDuration;
             } else {
-                // Move to the next waypoint
+                
                 carData.currentWaypointIndex = (carData.currentWaypointIndex + 1) % carData.path.length;
                 carData.startTime = currentTime;
                 const nextWaypoint = carData.path[carData.currentWaypointIndex];
@@ -404,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Animation Logic for People Walking Sprites ---
-    // Define paths for each person in Tiled pixel coordinates
+    
     const peoplePaths = {
         boy1: [
             { x: 28.5*16, y: -2*16, direction: 'down', stopDuration: 54000 ,hide: false, speed: 0.05, frameRate: 100},
@@ -441,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
         boy3: [
             { x: 32.25*16, y: 17.75*16, direction: 'up', stopDuration: 58000, hide: true, speed: 0.04, frameRate: 180 },
             { x: 32.25*16, y: 17.75*16, direction: 'down', stopDuration: 17000, hide: true, speed: 0.04, frameRate: 180 },
-            { x: 32.25*16, y: 17.75*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },//door car
+            { x: 32.25*16, y: 17.75*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 32.25*16, y: 18.75*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 32.25*16, y: 18.75*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 28.75*16, y: 18.75*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
@@ -581,7 +577,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
     };
 
-    // Define people instances with their paths and properties
+    
     const peopleInstances = [
         {
             id: 'boy-walking-sprite-1',
@@ -789,14 +785,14 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {DOMHighResTimeStamp} currentTime The current time provided by requestAnimationFrame.
      */
     function animatePersonPath(personData, currentTime) {
-        // Control visibility based on `personData.isHidden`
+        
         if (personData.isHidden) {
             personData.element.classList.add('hidden-by-flag');
         } else {
             personData.element.classList.remove('hidden-by-flag');
         }
 
-        // Handle stopped state
+        
         if (personData.isStopped) {
             if (currentTime < personData.stopUntil) {
                 const currentDirection = personData.path[personData.currentWaypointIndex].direction;
@@ -813,7 +809,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Scaling and Waypoint data setup
+        
         const mapContainerWidth = mapContainer.offsetWidth;
         const mapContainerHeight = mapContainer.offsetHeight;
         const originalMapWidth = parseFloat(mapContainer.dataset.originalMapWidth);
@@ -822,22 +818,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const scaleY = mapContainerHeight / originalMapHeight;
 
         const targetWaypoint = personData.path[personData.currentWaypointIndex];
-        // Scale the original coordinates from Tiled's pixel values
+        
         const targetScaledX = targetWaypoint.x * scaleX;
         const targetScaledY = targetWaypoint.y * scaleY;
 
-        // Initialize position for new segment
+        
         if (!personData.startTime) {
             personData.startTime = currentTime;
             const prevWaypointIndex = (personData.currentWaypointIndex === 0) ? personData.path.length - 1 : personData.currentWaypointIndex - 1;
             const prevWaypoint = personData.path[prevWaypointIndex];
-            // Set initial position to the previous waypoint
+            
             personData.currentX = prevWaypoint.x * scaleX;
             personData.currentY = prevWaypoint.y * scaleY;
             updatePersonSpriteFrame(personData.element, targetWaypoint.direction, 0);
         }
 
-        // Calculate movement for this frame
+        
         if (personData.lastUpdateTime === 0) {
             personData.lastUpdateTime = currentTime;
         }
@@ -852,14 +848,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const distanceToTravelThisFrame = personData.speed * actualDeltaTime;
 
-        // Move towards the target waypoint
+        
         if (remainingDistance > distanceToTravelThisFrame) {
-            // Not yet at the waypoint, move towards it
+            
             const ratio = distanceToTravelThisFrame / remainingDistance;
             personData.currentX += remainingDx * ratio;
             personData.currentY += remainingDy * ratio;
 
-            // Update sprite frame based on direction and frame index
+            
             if (currentTime - personData.lastFrameTime > personData.frameRate) {
                 personData.currentFrameIndex = (personData.currentFrameIndex + 1) % WALK_FRAMES[targetWaypoint.direction].length;
                 personData.lastFrameTime = currentTime;
@@ -867,11 +863,11 @@ document.addEventListener('DOMContentLoaded', () => {
             updatePersonSpriteFrame(personData.element, targetWaypoint.direction, personData.currentFrameIndex);
 
         } else {
-            // Reached the waypoint
+            
             personData.currentX = targetScaledX;
             personData.currentY = targetScaledY;
 
-            // Handle visibility, speed, and frame rate changes at the waypoint
+            
             if (typeof targetWaypoint.hide !== 'undefined') {
                 personData.isHidden = targetWaypoint.hide;
             }
@@ -884,7 +880,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 personData.frameRate = targetWaypoint.frameRate;
             }
 
-            // Handle stopping or moving to next waypoint
+            
             if (targetWaypoint.stopDuration > 0) {
                 personData.isStopped = true;
                 personData.stopUntil = currentTime + targetWaypoint.stopDuration;
@@ -900,7 +896,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Calculate the visual dimensions for positioning using the stored scale property
+        
         const visualWidth = BASE_SPRITE_WIDTH * personData.currentScale;
         const visualHeight = BASE_SPRITE_HEIGHT * personData.currentScale;
 
@@ -913,17 +909,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Main Initialization and Resize Handler ---
     function initializeAndResizeElements() {
-        // Get current scaled dimensions of the map container
+        
         const mapContainerWidth = mapContainer.offsetWidth;
         const mapContainerHeight = mapContainer.offsetHeight;
         const originalMapWidth = parseFloat(mapContainer.dataset.originalMapWidth);
         const originalMapHeight = parseFloat(mapContainer.dataset.originalMapHeight);
 
-        // Calculate current scaling factors
+        
         const scaleX = mapContainerWidth / originalMapWidth;
         const scaleY = mapContainerHeight / originalMapHeight;
 
-        // --- Create/Update Clickable Areas ---
+        
         clickableAreaDefinitions.forEach(areaData => {
             let areaElement = document.getElementById(`clickable-${areaData.id}`);
             if (!areaElement) {
@@ -942,13 +938,13 @@ document.addEventListener('DOMContentLoaded', () => {
             areaElement.style.height = `${areaData.originalHeight * scaleY}px`;
         });
 
-        // --- Scale and Snap Cars to new positions ---
+        
         carInstances.forEach(carData => {
-            // Apply scaled width and height
+            
             carData.element.style.width = `${BASE_CAR_WIDTH * scaleX}px`;
             carData.element.style.height = `${BASE_CAR_HEIGHT * scaleY}px`;
 
-            // Snap position
+            
             const currentPathSegmentStart = carData.path[(carData.currentWaypointIndex === 0 ? carData.path.length - 1 : carData.currentWaypointIndex - 1)];
             carData.currentX = currentPathSegmentStart.x * scaleX;
             carData.currentY = currentPathSegmentStart.y * scaleY;
@@ -958,26 +954,26 @@ document.addEventListener('DOMContentLoaded', () => {
             carData.lastUpdateTime = 0;
         });
 
-        // --- Scale and Snap People to new positions ---
+        
         peopleInstances.forEach(personData => {
-            // Calculate the new scale based on map width and store it
+            
             personData.currentScale = BASE_SPRITE_SCALE_MULTIPLIER * scaleX;
             personData.element.style.transform = `scale(${personData.currentScale})`;
 
-            // Calculate the effective visual size for positioning
+            
             const visualWidth = BASE_SPRITE_WIDTH * personData.currentScale;
             const visualHeight = BASE_SPRITE_HEIGHT * personData.currentScale;
 
-            // Snap position
+            
             const currentPathSegmentStart = personData.path[(personData.currentWaypointIndex === 0 ? personData.path.length - 1 : personData.currentWaypointIndex - 1)];
             personData.currentX = currentPathSegmentStart.x * scaleX;
             personData.currentY = currentPathSegmentStart.y * scaleY;
 
-            // This positioning now correctly accounts for the new dynamic scale
+            
             personData.element.style.left = `${personData.currentX - visualWidth / 2}px`;
             personData.element.style.top = `${personData.currentY - visualHeight}px`;
 
-            // Reset animation timers
+            
             personData.startTime = null;
             personData.lastUpdateTime = 0;
             personData.lastFrameTime = 0;
@@ -985,10 +981,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Event Listeners ---
-    // Preload assets and initialize the scene
+    
     const preloader = document.getElementById('preloader');
 
-    // Resize event listener to handle dynamic resizing of the map container
+    
     window.addEventListener('resize', initializeAndResizeElements);
 
     Promise.all([
@@ -997,12 +993,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ]).then(() => {
         console.log("All assets loaded. Initializing the scene.");
 
-        // Hide preloader
+        
         if(preloader) {
             preloader.classList.add('hidden');
         }
 
-        // Initialize map container with original dimensions
+        
         initializeAndResizeElements();
         carInstances.forEach(car => requestAnimationFrame((ts) => animateCarPath(car, ts)));
         peopleInstances.forEach(person => requestAnimationFrame((ts) => animatePersonPath(person, ts)));
@@ -1017,12 +1013,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // --- Data Fetching Functions ---
 
-const resumeContentCache = {};   // Dont forgot to remove older caches. TODO
+const resumeContentCache = {};   
 
 function preloadResumeContent() {
     console.log("Starting to preload resume content from Sanity...");
 
-    // Use the imported client instance here instead of a locally defined one
+    
     const queryCertifications = `*[_type == "certifications"]{
         title,
         institution,
@@ -1034,7 +1030,7 @@ function preloadResumeContent() {
         title,
         projectStartDate,
         projectEndDate,
-        coverImage,
+        "coverImageUrl": coverImage.asset->url,
         shortDescription,
         longDescription,
         technologies,
@@ -1044,10 +1040,11 @@ function preloadResumeContent() {
 
     const queryWorkExperience = `*[_type == "workExperience"]{
         title,
-        institution,
+        companyName,
         description,
         startDate,
         endDate,
+        "companyLogoUrl": companyLogo.asset->url,
     } | order(startDate desc)`;
 
     const queryEducation = `*[_type == "education"]{
@@ -1056,16 +1053,16 @@ function preloadResumeContent() {
         degreeType,
         startDate,
         endDate,
-        institutionCoverImage,
+        "institutionCoverImageUrl": instituteCoverImage.asset->url,
         description,
     } | order(startDate desc)`;
 
     const querySkills = `*[_type == "skills"]{
         title,
-        institution,
         description,
         proficiency,
         "imageUrl": image.asset->url,
+        category
     }`;
 
     return Promise.all([

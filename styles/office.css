@@ -1,88 +1,135 @@
 /* styles/office.css */
 
-/* --- Scoped Theme for the Office Modal --- */
-.office-modal-active #modal-body {
-    padding: 0; /* Remove padding to allow columns to touch the edges */
+/* --- THEME VARIABLES & SCOPED STYLES --- */
+.office-theme .modal-content {
+    --bg-office: #111827; 
+    --panel-bg: #ffffff27; 
+    --border-color: #374151;
+    --accent-white: #e8e8e8;
+    --text-light: #e9f2ff;
+    --text-muted: #c5c5c5;
+
+    color: var(--text-dark);
+    position: relative;
+    isolation: isolate;
+}
+
+.office-theme .modal-content::before {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(2px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.office-theme #modal-body {
+    padding: 0;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* --- Main Layout --- */
-.office-wrapper {
+.office-theme #modal-title {
+    color: #FFF;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* --- MAIN LAYOUT --- */
+.office-theme .office-wrapper {
     display: flex;
     height: 100%;
-    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Separator from title */
 }
 
-/* --- Left Panel: Directory --- */
-.directory-panel {
-    flex: 0 0 350px; /* Fixed width for the directory list */
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+/* --- LEFT PANEL: DIRECTORY --- */
+.office-theme .directory-panel {
+    flex: 0 0 400px; 
+    border-right: 1px solid var(--border-color);
     overflow-y: auto;
-    padding: 1.5rem 0;
+    padding: 1.5rem 0.75rem;
 }
 
-.directory-item {
-    padding: 1rem 1.5rem;
+.office-theme .directory-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
     cursor: pointer;
-    border-left: 4px solid transparent;
-    transition: background-color 0.2s, border-left-color 0.2s;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: background-color 0.2s, border-color 0.2s;
 }
 
-.directory-item:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+.office-theme .directory-item:hover {
+    background-color: var(--panel-bg);
 }
 
-.directory-item.active {
-    background-color: rgba(135, 206, 235, 0.1);
-    border-left-color: #87CEEB; /* Use link color as accent */
+.office-theme .directory-item.active {
+    background-color: var(--panel-bg);
+    border-color: var(--accent-white);
 }
 
-.directory-item .job-title {
+.office-theme .company-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: contain;
+    background-color: #fff; 
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.office-theme .job-info .job-title {
     margin: 0 0 0.25rem 0;
     font-size: 1.1rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-light);
 }
 
-.directory-item .company-name {
+.office-theme .job-info .company-name {
     margin: 0;
     font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-muted);
 }
 
-/* --- Right Panel: Details --- */
-.detail-panel {
-    flex: 1 1 auto; /* Take up the rest of the space */
+/* --- RIGHT PANEL: DETAILS --- */
+.office-theme .detail-panel {
+    flex: 1 1 auto;
     padding: 2.5rem 3rem;
     overflow-y: auto;
 }
 
-.detail-placeholder {
+.office-theme .detail-placeholder {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--text-muted);
     font-size: 1.2rem;
 }
 
-.detail-subheading {
+.office-theme .detail-subheading {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: -1rem;
     margin-bottom: 2rem;
-    color: rgba(255, 255, 255, 0.6);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
     padding-bottom: 1rem;
 }
 
-.responsibilities-list {
+.office-theme .responsibilities-list {
     padding-left: 1.5rem;
     line-height: 1.9;
+    color: var(--text-light);
 }
 
-.responsibilities-list li {
+.office-theme .responsibilities-list li {
     margin-bottom: 1rem;
+}
+
+.office-theme .pixel-heading {
+    color: var(--accent-white);
 }

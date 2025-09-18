@@ -14,7 +14,6 @@ export function renderWorkshop(projects) {
         return "<p>Implement Projects</p>";
     }
 
-    // Filter projects into the two lists
     const inProgressProjects = projects.filter(p => !p.projectEndDate);
     const completedProjects = projects.filter(p => p.projectEndDate);
 
@@ -40,7 +39,6 @@ export function renderWorkshop(projects) {
         const workshopWrapper = document.querySelector('.workshop-wrapper');
         const detailView = document.getElementById('project-detail-view');
         setupLazyLoading();
-        // Wait for all lazy images to be loaded before positioning timeline items
         const lazyImages = document.querySelectorAll('.lazy');
         if (lazyImages.length === 0) {
             positionTimelineItems();
@@ -64,11 +62,10 @@ export function renderWorkshop(projects) {
 function createProjectCardHTML(project) {
     const startDate = new Date(project.projectStartDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
     const endDate = project.projectEndDate ? new Date(project.projectEndDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) : 'In-Progress';
-    console.log(project.shortDescription);
     return `
         <div class="timeline-item" data-project-id="${project.title}">
             <div class="timeline-content">
-                <img data-src="https://www.mygreatlearning.com/blog/wp-content/uploads/2025/04/rag.jpg" class="project-cover-image lazy" alt="${project.title} cover">
+                <img data-src="${project.coverImageUrl || ''}" class="project-cover-image lazy" alt="${project.title} cover">
                 <h3 class="pixel-heading">${project.title}</h3>
                 <div class="timeline-date">${startDate} - ${endDate}</div>
                 <p>${project.shortDescription || ''}</p>
@@ -153,7 +150,6 @@ function showProjectDetail(project, element, workshopWrapper, detailView) {
     activeProjectElement.classList.add('active');
 
     requestAnimationFrame(() => {
-        // Reposition all cards into their final stacked layout
         document.querySelectorAll('.timeline-container').forEach(container => {
             let stackedHeight = 0;
             container.querySelectorAll('.timeline-item').forEach(item => {
@@ -227,26 +223,4 @@ function hideProjectDetail(workshopWrapper, detailView) {
     setTimeout(() => {
         positionTimelineItems();
     }, 500);
-}
-
-/**
- * Sets up the observer for auto-collapsing the detail view.
- */
-function setupAutoCollapseObserver(element, workshopWrapper, detailView) {
-    if (scrollObserver) {
-        scrollObserver.disconnect();
-    }
-
-    scrollObserver = new IntersectionObserver((entries) => {
-        if (!entries[0].isIntersecting) {
-            hideProjectDetail(workshopWrapper, detailView);
-        }
-    }, { 
-        root: modalContent,
-        threshold: 0.1
-    });
-
-    if (element) {
-        scrollObserver.observe(element);
-    }
 }

@@ -11,19 +11,19 @@ export function renderSchool(educationList) {
 
     // --- GENERATE THE HTML FOR EACH DIPLOMA CARD ---
     const educationHTML = educationList.map(edu => {
-        // Format dates
+ 
         const startDate = new Date(edu.startDate).getFullYear();
-        const endDate = edu.endDate ? new Date(edu.endDate).getFullYear() : 'Ongoing';
+        const endDate = edu.endDate ? new Date(edu.endDate).getFullYear() : 'Ongoing';       
         
-        // Sanity rich text descriptions are arrays of blocks
         const descriptionHTML = edu.description
             ? edu.description.map(block => `<p>${block.children.map(child => child.text).join('')}</p>`).join('')
             : '';
+        console.log(edu.institutionCoverImageUrl);
 
         return `
             <div class="diploma-card">
                 <div class="diploma-header">
-                    <img src="${edu.institutionCoverImage?.asset?.url || ''}" alt="${edu.institution} logo" class="institution-logo">
+                    <img src="${edu.institutionCoverImageUrl}" alt="${edu.institution} logo" class="institution-logo">
                 </div>
                 <div class="diploma-body">
                     <h3 class="pixel-heading">${edu.title}</h3>
@@ -37,6 +37,5 @@ export function renderSchool(educationList) {
         `;
     }).join('');
 
-    // Wrap everything in a container
     return `<div class="education-wrapper">${educationHTML}</div>`;
 }

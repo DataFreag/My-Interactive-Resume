@@ -1,73 +1,127 @@
 /* styles/school.css */
 
-/* --- Scoped Theme for the School Modal --- */
-.school-modal-active #modal-body {
-    max-width: 1100px; /* Give it a bit more space */
+/* --- THEME VARIABLES & SCOPED STYLES --- */
+.school-theme .modal-content {
+    --panel-bg: rgba(0, 0, 0, 0.053);
+    --border-color: rgba(0, 0, 0, 0.1);
+    --accent-brown: #f5812e;
+    --text-white: #ffffff;
+    --text-muted: #c5c5c5;
+    --font-serif: 'Lora', serif;
+
+    color: var(--text-white);
+    position: relative;
+    isolation: isolate;
+}
+
+
+.school-theme .modal-content::before {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(2px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.school-theme #modal-body {
+    max-width: 1100px;
     margin: 0 auto;
 }
 
-/* --- Main Layout --- */
-.education-wrapper {
+.school-theme #modal-title { color: var(--text-white); }
+.school-theme .modal-close-btn { color: var(--text-white); }
+
+
+/* --- MAIN LAYOUT --- */
+.school-theme .education-wrapper {
     display: flex;
     justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap; /* Allows cards to stack on smaller screens */
+    gap: 2.5rem;
+    flex-wrap: wrap;
 }
 
-/* --- Diploma Card Styling --- */
-.diploma-card {
-    flex: 1 1 400px; /* Allow cards to grow, but have a base width */
+/* --- DIPLOMA CARD STYLING --- */
+.school-theme .diploma-card {
+    flex: 1 1 420px;
     max-width: 500px;
-    background-color: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    overflow: hidden; /* Ensures the image corner rounding works */
+    height: 750px; 
+    
+    background-color: var(--panel-bg);
+    backdrop-filter: blur(10px); 
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    
+    overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
 }
 
-.diploma-card:hover {
+.school-theme .diploma-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
-.diploma-header {
-    height: 180px;
-    background-color: rgba(0, 0, 0, 0.2);
+.school-theme .diploma-header {
+    height: 200px;
+    background-color: #e0e0e0; 
 }
 
-.institution-logo {
+.school-theme .institution-logo {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures the image covers the area nicely */
+    object-fit: cover;
 }
 
-.diploma-body {
+.school-theme .diploma-body {
     padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
 }
 
-.diploma-body .pixel-heading {
+.school-theme .diploma-body .pixel-heading {
     font-size: 1.6rem;
-    color: #87CEEB; /* Use the accent link color */
+    color: var(--accent-brown);
     margin-bottom: 0.5rem;
 }
 
-.institution-name {
-    font-size: 1.2rem;
+.school-theme .institution-name {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
     font-weight: 600;
     margin: 0;
-    color: #fff;
+    color: var(--text-white);
 }
 
-.education-dates {
+.school-theme .education-dates {
     font-size: 1rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-muted);
     margin-top: 0.25rem;
     margin-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.education-description p {
-    margin-bottom: 1rem;
-    color: rgba(255, 255, 255, 0.8);
+.school-theme .education-description {
+    flex-grow: 1;
+    overflow-y: auto;
+    min-height: 0;
+    color: var(--text-muted);
+    font-family: var(--font-serif);
+    
+    
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-brown) transparent;
+}
+.school-theme .education-description::-webkit-scrollbar { width: 8px; }
+.school-theme .education-description::-webkit-scrollbar-track { background: transparent; }
+.school-theme .education-description::-webkit-scrollbar-thumb {
+    background-color: var(--accent-brown);
+    border-radius: 4px;
 }

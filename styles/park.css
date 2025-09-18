@@ -1,45 +1,80 @@
 /* styles/park.css */
 
-/* --- Scoped Theme for the Park Modal --- */
-.park-modal-active #modal-body {
+/* --- THEME VARIABLES & SCOPED STYLES --- */
+.park-theme .modal-content {
+    --panel-bg: rgba(76, 153, 107, 0.205); 
+    --border-color: rgba(255, 255, 255, 0.1);
+    --accent-green: #22C55E;
+    --text-light: #F3F4F6;
+    --text-muted: #c5c5c5;
+
+    color: var(--text-dark);
+    position: relative;
+    isolation: isolate;
+}
+
+.park-theme .modal-content::before {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(2px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+
+.park-theme .modal-close-btn {
+    position: absolute;
+    top: 2rem;
+    right: 1rem;
+    z-index: 3;
+}
+
+.park-theme #modal-body {
     max-width: 1200px;
     margin: 0 auto;
 }
+.park-theme #modal-title { color: var(--text-light); }
 
-/* --- Main Dashboard Layout --- */
-.dashboard-grid {
+/* --- DASHBOARD LAYOUT & CARD STYLING --- */
+.park-theme .dashboard-grid {
     display: grid;
-    /* Create responsive columns: they will be at least 350px wide */
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 2rem;
 }
 
-/* --- Individual Card Styling --- */
-.hobby-card {
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+.park-theme .hobby-card {
+    background-color: var(--panel-bg);
+    backdrop-filter: blur(10px); 
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
     padding: 2rem;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
 }
 
-.hobby-card .pixel-heading {
+.park-theme .hobby-card .pixel-heading {
     font-size: 1.2rem;
-    color: #87CEEB; /* Use the accent link color for card titles */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--accent-green);
+    border-bottom: 1px solid var(--border-color);
     padding-bottom: 1rem;
     margin-bottom: 1rem;
 }
 
-.hobby-card p {
-    color: rgba(255, 255, 255, 0.8);
+.park-theme .hobby-card p {
+    color: var(--text-muted);
+}
+.park-theme .hobby-card p strong {
+    color: var(--text-light);
 }
 
-.placeholder-text {
+.park-theme .placeholder-text {
     margin-top: 1.5rem;
     padding: 1rem;
     background-color: rgba(0, 0, 0, 0.2);
-    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border: 1px dashed var(--border-color);
     text-align: center;
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--text-muted);
     border-radius: 4px;
 }
