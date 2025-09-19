@@ -187,6 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
         'right': [9, 10, 11]
     };
 
+    const animationState = {
+        scaleX: 1,
+        scaleY: 1
+    };
+
     
     const peopleImagePaths = {
         'boy-walk': 'anim/people/boy.png',
@@ -303,105 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'green-moving-car', element: greenCar, path: carPaths.green, speed: 0.05, currentWaypointIndex: 1, currentX: 0, currentY: 0, startTime: null, animationId: null, isStopped: false, stopUntil: 0, type: 'green' }
     ];
 
-    /**
-     * Updates a car's image based on its direction.
-     * @param {HTMLElement} carElement
-     * @param {string} carType
-     * @param {string} direction
-     */
-    function updateCarImage(carElement, carType, direction) {
-        const imageKey = `${carType}-${direction}`;
-        const imageUrl = carImagePaths[imageKey];
-        if (imageUrl && carElement.style.backgroundImage !== `url("${imageUrl}")`) {
-            carElement.style.backgroundImage = `url("${imageUrl}")`;
-        }
-    }
-
-    /**
-     * Animates a single car element along its predefined path.
-     * @param {object} carData Object containing element, path, speed, etc.
-     * @param {DOMHighResTimeStamp} currentTime The current time provided by requestAnimationFrame.
-     */
-    function animateCarPath(carData, currentTime) {
-        if (carData.isStopped) {
-            if (currentTime < carData.stopUntil) {
-                carData.animationId = requestAnimationFrame((ts) => animateCarPath(carData, ts));
-                return;
-            } else {
-                carData.isStopped = false;
-                carData.startTime = currentTime;
-                carData.currentWaypointIndex = (carData.currentWaypointIndex + 1) % carData.path.length;
-            }
-        }
-
-        const prevWaypointIndex = (carData.currentWaypointIndex === 0) ? carData.path.length - 1 : carData.currentWaypointIndex - 1;
-        const prevWaypoint = carData.path[prevWaypointIndex];
-        const targetWaypoint = carData.path[carData.currentWaypointIndex];
-
-        
-        if (!carData.startTime) {
-            carData.startTime = currentTime;
-            carData.currentX = prevWaypoint.x;
-            carData.currentY = prevWaypoint.y;
-            updateCarImage(carData.element, carData.type, targetWaypoint.direction);
-        }
-
-        
-        const mapContainerWidth = mapContainer.offsetWidth;
-        const mapContainerHeight = mapContainer.offsetHeight;
-        const originalMapWidth = parseFloat(mapContainer.dataset.originalMapWidth);
-        const originalMapHeight = parseFloat(mapContainer.dataset.originalMapHeight);
-        const scaleX = mapContainerWidth / originalMapWidth;
-        const scaleY = mapContainerHeight / originalMapHeight;
-
-        const prevScaledX = prevWaypoint.x * scaleX;
-        const prevScaledY = prevWaypoint.y * scaleY;
-        const targetScaledX = targetWaypoint.x * scaleX;
-        const targetScaledY = targetWaypoint.y * scaleY;
-
-        const segmentDx = targetScaledX - prevScaledX;
-        const segmentDy = targetScaledY - prevScaledY;
-        const segmentDistance = Math.sqrt(segmentDx * segmentDx + segmentDy * segmentDy);
-
-        const segmentElapsedTime = currentTime - carData.startTime;
-
-        let segmentProgress = 0;
-        if (segmentDistance > 0) {
-            segmentProgress = Math.min((carData.speed * segmentElapsedTime) / segmentDistance, 1);
-        }
-
-        carData.currentX = prevScaledX + segmentDx * segmentProgress;
-        carData.currentY = prevScaledY + segmentDy * segmentProgress;
-
-        carData.element.style.left = `${carData.currentX}px`;
-        carData.element.style.top = `${carData.currentY}px`;
-        carData.element.style.transform = `translate(-50%, -50%)`;
-
-
-        
-        if (segmentProgress >= 1) {
-            
-            carData.currentX = targetScaledX;
-            carData.currentY = targetScaledY;
-
-            if (targetWaypoint.stopDuration > 0) {
-                carData.isStopped = true;
-                carData.stopUntil = currentTime + targetWaypoint.stopDuration;
-            } else {
-                
-                carData.currentWaypointIndex = (carData.currentWaypointIndex + 1) % carData.path.length;
-                carData.startTime = currentTime;
-                const nextWaypoint = carData.path[carData.currentWaypointIndex];
-                updateCarImage(carData.element, carData.type, nextWaypoint.direction);
-            }
-        }
-
-        carData.animationId = requestAnimationFrame((ts) => animateCarPath(carData, ts));
-    }
-
-    // --- Animation Logic for People Walking Sprites ---
-    
-    const peoplePaths = {
+        const peoplePaths = {
         boy1: [
             { x: 28.5*16, y: -2*16, direction: 'down', stopDuration: 54000 ,hide: false, speed: 0.05, frameRate: 100},
             { x: 28.5*16, y: -2*16, direction: 'down', stopDuration: 2000 ,hide: false, speed: 0.05, frameRate: 100},
@@ -433,6 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { x: 25.75*16, y: 6.1*16, direction: 'down', stopDuration: 1000 },
             { x: 25.75*16, y: 3.75*16, direction: 'up', stopDuration: 0 },
             { x: 25.75*16, y: 3.75*16, direction: 'right', stopDuration: 1000 },
+            { x: 19.75*16, y: 3.75*16, direction: 'left', stopDuration: 0 },
         ],
         boy3: [
             { x: 32.25*16, y: 17.75*16, direction: 'up', stopDuration: 58000, hide: true, speed: 0.04, frameRate: 180 },
@@ -447,6 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { x: 26.75*16, y: 21.75*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 26.75*16, y: 22.25*16, direction: 'down', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 32.25*16, y: 22.25*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 32.25*16, y: 17.75*16, direction: 'up', stopDuration: 0, hide: true, speed: 0.04, frameRate: 180 },
         ],
         girl1: [
             { x: 2.75*16, y: 6.5*16, direction: 'down', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
@@ -458,6 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { x: 5.75*16, y: 8.5*16, direction: 'down', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
             { x: 2.75*16, y: 8.5*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 2.75*16, y: 6.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 2.75*16, y: 6.5*16, direction: 'left', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
         ],
         girl2: [
             { x: 21.75*16, y: 10.5*16, direction: 'up', stopDuration: 250, hide: false, speed: 0.04, frameRate: 180 },
@@ -490,6 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { x: 18.75*16, y: 15.25*16, direction: 'up', stopDuration: 2000, hide: false, speed: 0.04, frameRate: 180 },
             { x: 18.75*16, y: 11.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 21.75*16, y: 11.5*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 21.75*16, y: 10.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
         ],
         kid1: [
             { x: 20.75*16, y: 10.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
@@ -520,6 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { x: 18.75*16, y: 15.25*16, direction: 'left', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 18.75*16, y: 11.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
             { x: 20.75*16, y: 11.5*16, direction: 'right', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
+            { x: 20.75*16, y: 10.5*16, direction: 'up', stopDuration: 0, hide: false, speed: 0.04, frameRate: 180 },
         ],
         man: [
             { x: 18.75*16, y: 11*16, direction: 'down', stopDuration: 1000, hide: false, speed: 0.04, frameRate: 180 },
@@ -761,6 +673,83 @@ document.addEventListener('DOMContentLoaded', () => {
         },
     ];
 
+    const synchronizedPeopleIndices = [0, 2, 4, 5, 7, 8];
+    const synchronizedPeople = peopleInstances.filter((_, index) => synchronizedPeopleIndices.includes(index));
+    const independentPeople = peopleInstances.filter((_, index) => !synchronizedPeopleIndices.includes(index));
+
+    /**
+     * Updates a car's image based on its direction.
+     * @param {HTMLElement} carElement
+     * @param {string} carType
+     * @param {string} direction
+     */
+    function updateCarImage(carElement, carType, direction) {
+        const imageKey = `${carType}-${direction}`;
+        const imageUrl = carImagePaths[imageKey];
+        if (imageUrl && carElement.style.backgroundImage !== `url("${imageUrl}")`) {
+            carElement.style.backgroundImage = `url("${imageUrl}")`;
+        }
+    }
+
+    /**
+     * Animates a single car element along its predefined path.
+     * @param {object} carData Object containing element, path, speed, etc.
+     * @param {DOMHighResTimeStamp} currentTime The current time provided by requestAnimationFrame.
+     */
+    function animateCarPath(carData, currentTime) {
+        if (carData.isStopped) {
+            if (currentTime >= carData.stopUntil) {
+                carData.isStopped = false;
+                carData.startTime = currentTime;
+                carData.currentWaypointIndex = (carData.currentWaypointIndex + 1) % carData.path.length;
+            }
+            return;
+        }
+        const prevWaypointIndex = (carData.currentWaypointIndex === 0) ? carData.path.length - 1 : carData.currentWaypointIndex - 1;
+        const prevWaypoint = carData.path[prevWaypointIndex];
+        const targetWaypoint = carData.path[carData.currentWaypointIndex];
+        if (!carData.startTime) {
+            carData.startTime = currentTime;
+            carData.currentX = prevWaypoint.x;
+            carData.currentY = prevWaypoint.y;
+            updateCarImage(carData.element, carData.type, targetWaypoint.direction);
+        }
+        const scaleX = animationState.scaleX;
+        const scaleY = animationState.scaleY;
+        const prevScaledX = prevWaypoint.x * scaleX;
+        const prevScaledY = prevWaypoint.y * scaleY;
+        const targetScaledX = targetWaypoint.x * scaleX;
+        const targetScaledY = targetWaypoint.y * scaleY;
+        const segmentDx = targetScaledX - prevScaledX;
+        const segmentDy = targetScaledY - prevScaledY;
+        const segmentDistance = Math.sqrt(segmentDx * segmentDx + segmentDy * segmentDy);
+        const segmentElapsedTime = currentTime - carData.startTime;
+        let segmentProgress = (segmentDistance > 0) ? Math.min((carData.speed * segmentElapsedTime) / segmentDistance, 1) : 1;
+        carData.currentX = prevScaledX + segmentDx * segmentProgress;
+        carData.currentY = prevScaledY + segmentDy * segmentProgress;
+        carData.element.style.left = `${carData.currentX}px`;
+        carData.element.style.top = `${carData.currentY}px`;
+        carData.element.style.transform = `translate(-50%, -50%)`;
+        if (segmentProgress >= 1) {
+            carData.currentX = targetScaledX;
+            carData.currentY = targetScaledY;
+            if (carData.currentWaypointIndex === carData.path.length - 1) {
+                carData.isPathComplete = true;
+            } else if (targetWaypoint.stopDuration > 0) {
+                carData.isStopped = true;
+                carData.stopUntil = currentTime + targetWaypoint.stopDuration;
+            } else {
+                carData.currentWaypointIndex++;
+                carData.startTime = currentTime;
+                updateCarImage(carData.element, carData.type, carData.path[carData.currentWaypointIndex].direction);
+            }
+        }
+    }
+
+
+    // --- Animation Logic for People Walking Sprites ---
+    
+
     /**
      * Updates a person's sprite frame based on direction and animation progress.
      * @param {HTMLElement} personElement The person's DOM element.
@@ -785,141 +774,73 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {DOMHighResTimeStamp} currentTime The current time provided by requestAnimationFrame.
      */
     function animatePersonPath(personData, currentTime) {
-        
-        if (personData.isHidden) {
-            personData.element.classList.add('hidden-by-flag');
-        } else {
-            personData.element.classList.remove('hidden-by-flag');
-        }
-
-        
+        personData.element.classList.toggle('hidden-by-flag', personData.isHidden);
         if (personData.isStopped) {
-            if (currentTime < personData.stopUntil) {
-                const currentDirection = personData.path[personData.currentWaypointIndex].direction;
-                updatePersonSpriteFrame(personData.element, currentDirection, 0);
-                personData.animationId = requestAnimationFrame((ts) => animatePersonPath(personData, ts));
-                return;
-            } else {
+            if (currentTime >= personData.stopUntil) {
                 personData.isStopped = false;
                 personData.startTime = null;
                 personData.currentWaypointIndex = (personData.currentWaypointIndex + 1) % personData.path.length;
                 personData.currentFrameIndex = 0;
-                personData.lastFrameTime = 0;
-                personData.lastUpdateTime = 0;
             }
+            return;
         }
-
-        
-        const mapContainerWidth = mapContainer.offsetWidth;
-        const mapContainerHeight = mapContainer.offsetHeight;
-        const originalMapWidth = parseFloat(mapContainer.dataset.originalMapWidth);
-        const originalMapHeight = parseFloat(mapContainer.dataset.originalMapHeight);
-        const scaleX = mapContainerWidth / originalMapWidth;
-        const scaleY = mapContainerHeight / originalMapHeight;
-
+        const scaleX = animationState.scaleX;
+        const scaleY = animationState.scaleY;
         const targetWaypoint = personData.path[personData.currentWaypointIndex];
-        
         const targetScaledX = targetWaypoint.x * scaleX;
         const targetScaledY = targetWaypoint.y * scaleY;
-
-        
         if (!personData.startTime) {
             personData.startTime = currentTime;
-            const prevWaypointIndex = (personData.currentWaypointIndex === 0) ? personData.path.length - 1 : personData.currentWaypointIndex - 1;
-            const prevWaypoint = personData.path[prevWaypointIndex];
-            
+            const prevWaypoint = personData.path[(personData.currentWaypointIndex === 0) ? personData.path.length - 1 : personData.currentWaypointIndex - 1];
             personData.currentX = prevWaypoint.x * scaleX;
             personData.currentY = prevWaypoint.y * scaleY;
-            updatePersonSpriteFrame(personData.element, targetWaypoint.direction, 0);
         }
-
-        
-        if (personData.lastUpdateTime === 0) {
-            personData.lastUpdateTime = currentTime;
-        }
-        const deltaTime = currentTime - personData.lastUpdateTime;
+        const deltaTime = (personData.lastUpdateTime > 0) ? currentTime - personData.lastUpdateTime : 16.67;
         personData.lastUpdateTime = currentTime;
-        const maxDeltaTime = 200;
-        const actualDeltaTime = Math.min(deltaTime, maxDeltaTime);
-
+        const actualDeltaTime = Math.min(deltaTime, 200);
         const remainingDx = targetScaledX - personData.currentX;
         const remainingDy = targetScaledY - personData.currentY;
         const remainingDistance = Math.sqrt(remainingDx * remainingDx + remainingDy * remainingDy);
-
-        const distanceToTravelThisFrame = personData.speed * actualDeltaTime;
-
-        
-        if (remainingDistance > distanceToTravelThisFrame) {
-            
-            const ratio = distanceToTravelThisFrame / remainingDistance;
+        const distanceToTravel = personData.speed * actualDeltaTime;
+        if (remainingDistance > distanceToTravel) {
+            const ratio = distanceToTravel / remainingDistance;
             personData.currentX += remainingDx * ratio;
             personData.currentY += remainingDy * ratio;
-
-            
-            if (currentTime - personData.lastFrameTime > personData.frameRate) {
+            if (currentTime - personData.lastFrameTime > (targetWaypoint.frameRate || 150)) {
                 personData.currentFrameIndex = (personData.currentFrameIndex + 1) % WALK_FRAMES[targetWaypoint.direction].length;
                 personData.lastFrameTime = currentTime;
             }
-            updatePersonSpriteFrame(personData.element, targetWaypoint.direction, personData.currentFrameIndex);
-
         } else {
-            
             personData.currentX = targetScaledX;
             personData.currentY = targetScaledY;
-
-            
-            if (typeof targetWaypoint.hide !== 'undefined') {
-                personData.isHidden = targetWaypoint.hide;
-            }
-
-            if (typeof targetWaypoint.speed !== 'undefined') {
-                personData.speed = targetWaypoint.speed;
-            }
-
-            if (typeof targetWaypoint.frameRate !== 'undefined') {
-                personData.frameRate = targetWaypoint.frameRate;
-            }
-
-            
-            if (targetWaypoint.stopDuration > 0) {
+            if (typeof targetWaypoint.hide !== 'undefined') personData.isHidden = targetWaypoint.hide;
+            if (typeof targetWaypoint.speed !== 'undefined') personData.speed = targetWaypoint.speed;
+            if (!independentPeople.includes(personData) && personData.currentWaypointIndex === personData.path.length - 1) {
+                personData.isPathComplete = true;
+            } else if (targetWaypoint.stopDuration > 0) {
                 personData.isStopped = true;
                 personData.stopUntil = currentTime + targetWaypoint.stopDuration;
-                updatePersonSpriteFrame(personData.element, targetWaypoint.direction, 0);
             } else {
                 personData.currentWaypointIndex = (personData.currentWaypointIndex + 1) % personData.path.length;
                 personData.startTime = null;
-                personData.currentFrameIndex = 0;
-                personData.lastFrameTime = 0;
-                personData.lastUpdateTime = 0;
-                const nextWaypoint = personData.path[personData.currentWaypointIndex];
-                updatePersonSpriteFrame(personData.element, nextWaypoint.direction, 0);
             }
         }
-
-        
+        updatePersonSpriteFrame(personData.element, targetWaypoint.direction, personData.isStopped ? 0 : personData.currentFrameIndex);
         const visualWidth = BASE_SPRITE_WIDTH * personData.currentScale;
         const visualHeight = BASE_SPRITE_HEIGHT * personData.currentScale;
-
         personData.element.style.left = `${personData.currentX - visualWidth / 2}px`;
         personData.element.style.top = `${personData.currentY - visualHeight}px`;
-
-        personData.animationId = requestAnimationFrame((ts) => animatePersonPath(personData, ts));
     }
 
 
     // --- Main Initialization and Resize Handler ---
     function initializeAndResizeElements() {
-        
         const mapContainerWidth = mapContainer.offsetWidth;
         const mapContainerHeight = mapContainer.offsetHeight;
         const originalMapWidth = parseFloat(mapContainer.dataset.originalMapWidth);
         const originalMapHeight = parseFloat(mapContainer.dataset.originalMapHeight);
-
-        
-        const scaleX = mapContainerWidth / originalMapWidth;
-        const scaleY = mapContainerHeight / originalMapHeight;
-
-        
+        animationState.scaleX = mapContainerWidth / originalMapWidth;
+        animationState.scaleY = mapContainerHeight / originalMapHeight;
         clickableAreaDefinitions.forEach(areaData => {
             let areaElement = document.getElementById(`clickable-${areaData.id}`);
             if (!areaElement) {
@@ -927,57 +848,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 areaElement.id = `clickable-${areaData.id}`;
                 areaElement.classList.add('clickable-area');
                 mapContainer.appendChild(areaElement);
-                areaElement.addEventListener('click', () => {
-                    showModal(areaData.id);
-                    animateClickableArea(areaElement);
-                });
+                areaElement.addEventListener('click', () => { showModal(areaData.id); animateClickableArea(areaElement); });
             }
-            areaElement.style.left = `${areaData.originalX * scaleX}px`;
-            areaElement.style.top = `${areaData.originalY * scaleY}px`;
-            areaElement.style.width = `${areaData.originalWidth * scaleX}px`;
-            areaElement.style.height = `${areaData.originalHeight * scaleY}px`;
+            areaElement.style.left = `${areaData.originalX * animationState.scaleX}px`;
+            areaElement.style.top = `${areaData.originalY * animationState.scaleY}px`;
+            areaElement.style.width = `${areaData.originalWidth * animationState.scaleX}px`;
+            areaElement.style.height = `${areaData.originalHeight * animationState.scaleY}px`;
         });
-
-        
         carInstances.forEach(carData => {
-            
-            carData.element.style.width = `${BASE_CAR_WIDTH * scaleX}px`;
-            carData.element.style.height = `${BASE_CAR_HEIGHT * scaleY}px`;
-
-            
-            const currentPathSegmentStart = carData.path[(carData.currentWaypointIndex === 0 ? carData.path.length - 1 : carData.currentWaypointIndex - 1)];
-            carData.currentX = currentPathSegmentStart.x * scaleX;
-            carData.currentY = currentPathSegmentStart.y * scaleY;
-            carData.element.style.left = `${carData.currentX}px`;
-            carData.element.style.top = `${carData.currentY}px`;
-            carData.startTime = null; 
-            carData.lastUpdateTime = 0;
+            carData.element.style.width = `${BASE_CAR_WIDTH * animationState.scaleX}px`;
+            carData.element.style.height = `${BASE_CAR_HEIGHT * animationState.scaleY}px`;
+            carData.startTime = null;
         });
-
-        
         peopleInstances.forEach(personData => {
-            
-            personData.currentScale = BASE_SPRITE_SCALE_MULTIPLIER * scaleX;
+            personData.currentScale = BASE_SPRITE_SCALE_MULTIPLIER * animationState.scaleX;
             personData.element.style.transform = `scale(${personData.currentScale})`;
-
-            
-            const visualWidth = BASE_SPRITE_WIDTH * personData.currentScale;
-            const visualHeight = BASE_SPRITE_HEIGHT * personData.currentScale;
-
-            
-            const currentPathSegmentStart = personData.path[(personData.currentWaypointIndex === 0 ? personData.path.length - 1 : personData.currentWaypointIndex - 1)];
-            personData.currentX = currentPathSegmentStart.x * scaleX;
-            personData.currentY = currentPathSegmentStart.y * scaleY;
-
-            
-            personData.element.style.left = `${personData.currentX - visualWidth / 2}px`;
-            personData.element.style.top = `${personData.currentY - visualHeight}px`;
-
-            
             personData.startTime = null;
-            personData.lastUpdateTime = 0;
-            personData.lastFrameTime = 0;
         });
+    }
+
+    function checkAnimationSync() {
+        const allSyncEntities = [...carInstances, ...synchronizedPeople];
+        const allAnimationsComplete = allSyncEntities.every(entity => entity.isPathComplete);
+        if (allAnimationsComplete) {
+            console.log("All paths complete. Resetting synchronized loop.");
+            allSyncEntities.forEach(entity => {
+                entity.isPathComplete = false;
+                entity.currentWaypointIndex = 1;
+                entity.startTime = null;
+                entity.isStopped = false;
+            });
+        }
     }
 
     // --- Event Listeners ---
@@ -992,22 +893,18 @@ document.addEventListener('DOMContentLoaded', () => {
         preloadResumeContent()
     ]).then(() => {
         console.log("All assets loaded. Initializing the scene.");
-
-        
-        if(preloader) {
-            preloader.classList.add('hidden');
-        }
-
-        
+        if(preloader) { preloader.classList.add('hidden'); }
         initializeAndResizeElements();
-        carInstances.forEach(car => requestAnimationFrame((ts) => animateCarPath(car, ts)));
-        peopleInstances.forEach(person => requestAnimationFrame((ts) => animatePersonPath(person, ts)));
-
+        function masterAnimationLoop(currentTime) {
+            carInstances.forEach(car => animateCarPath(car, currentTime));
+            peopleInstances.forEach(person => animatePersonPath(person, currentTime));
+            checkAnimationSync();
+            requestAnimationFrame(masterAnimationLoop);
+        }
+        requestAnimationFrame(masterAnimationLoop);
     }).catch(error => {
         console.error("A critical error occurred during preloading:", error);
-        if(preloader) {
-            preloader.innerHTML = "Failed to load assets. Please refresh the page.";
-        }
+        if(preloader) { preloader.innerHTML = "Failed to load assets. Please refresh the page."; }
     });
 });
 
